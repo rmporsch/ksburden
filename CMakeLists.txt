@@ -2,6 +2,12 @@ project(ksburden)
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 include(ExternalProject)
 
+# Set the output folder where your program will be created
+set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
+include_directories(inc)
+
 # ==========
 # Check compiler version
 # ==========
@@ -21,10 +27,6 @@ else()
 	Compilation has only been tested with Clang and GCC.")
 endif()
 
-set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
-include_directories(inc)
 
 # ================
 # External projects
@@ -40,6 +42,7 @@ ExternalProject_Add(gflagsDown
 	INSTALL_COMMAND ""
 	UPDATE_COMMAND ""
 	)
+
 set(gflags_DIR ${LIBRARY_OUTPUT_PATH}/gflags/src/gflagsDown)
 add_library(gflags STATIC IMPORTED)
 add_dependencies(gflags gflagsDown)
@@ -91,8 +94,6 @@ if(OPENMP_FOUND)
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif()
 
-set(GCC_lz "-lz")
-
 #========
 # Boost
 #========
@@ -112,21 +113,14 @@ ExternalProject_Add(ArmadilloDownload
 	UPDATE_COMMAND ""
 	)
 
-find_package(BLAS REQUIRED)
-find_package(LAPACK REQUIRED)
-add_library(armadillo SHARED IMPORTED )
-set(Armadillo_DIR
-	${LIBRARY_OUTPUT_PATH}/armadillo-7.100.3/src/ArmadilloDownload)
-
-set(ARMADILLO_LIBRARY "${Armadillo_DIR}/libarmadillo.so")
-set(ARMADILLO_INCLUDE_DIR "${Armadillo_DIR}/include")
-
+set(Armadillo_DIR ${LIBRARY_OUTPUT_PATH}/armadillo-7.100.3/src/ArmadilloDownload)
+set(ARMADILLO_LIBRARY ${Armadillo_DIR}/libarmadillo.so)
+set(ARMADILLO_INCLUDE_DIR ${Armadillo_DIR}/include/)
 include_directories(${ARMADILLO_INCLUDE_DIR})
-set(${ARMADILLO_LINKER_FLAGS} "-lblas -O1 -llapack ")
-
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${ARMADILLO_LINKER_FLAGS}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ARMADILLO_LINKER_FLAGS}")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ARMADILLO_LINKER_FLAGS}")
+set(GCC_ARMADILLO_LINK_FLAG "-O1 -lblas -llapack")
+#SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_ARMADILLO_LINK_FLAG}")
+#SET(CMAKE_SHARED_LINKER_FLAGS  "${CMAKE_SHARED_LINKER_FLAGS} ${GCC_ARMADILLO_LINK_FLAG}")
+#FIND_PACKAGE(Armadillo)
 #=============================
 #=============================
 
@@ -143,21 +137,18 @@ add_library(loadvcf SHARED "src/load_vcf.cpp")
 add_dependencies(loadvcf ArmadilloDownload libStatGen easylogging)
 target_link_libraries(loadvcf libStatGenLib)
 target_compile_features(loadvcf PRIVATE cxx_range_for)
-target_compile_options(loadvcf PRIVATE -O1 -llapack -lblas )
 
 # liability_model
 add_library(liabilitymodel SHARED "src/liability_model.cpp")
 add_dependencies(liabilitymodel ArmadilloDownload loadvcf)
-target_link_libraries(liabilitymodel loadvcf ${ARMADILLO_LIBRARY})
+target_link_libraries(liabilitymodel loadvcf)
 target_compile_features(liabilitymodel PRIVATE cxx_range_for)
-target_compile_options(liabilitymodel PRIVATE -O1  ${BLAS_LINKER_FLAGS} ${LAPACK_LINKER_FLAGS})
 
 # analysis
 add_library(analysis SHARED "src/data_analysis.cpp")
 add_dependencies(analysis ArmadilloDownload loadvcf)
 target_link_libraries(analysis loadvcf)
 target_compile_features(analysis PRIVATE cxx_range_for)
-target_compile_options(analysis PRIVATE -O1 -llapack -lblas )
 
 # sim_flags
 add_library(sim_flags SHARED "src/simulation_flags.cpp")
@@ -185,26 +176,22 @@ target_link_libraries(sim
 	models
 	liabilitymodel
 	loadvcf
+	${ARMADILLO_LIBRARIES}
 	z
 	sim_flags
-	${ARMADILLO_LIBRARIES}
-	${LAPACK_LIBARIES}
-	${BLAS_LIBARIES}
+	-O2 blas lapack
 	)
-target_compile_options(sim PRIVATE -O1  ${BLAS_LINKER_FLAGS} ${LAPACK_LINKER_FLAGS})
 target_compile_features(sim PRIVATE cxx_range_for)
 
 # analysis program
 add_executable(ksburden ${CMAKE_SOURCE_DIR}/src/ksburden.cpp)
 target_link_libraries(ksburden
-	analysis
 	models
+	analysis
 	loadvcf
+	${ARMADILLO_LIBRARIES}
 	z
 	ksburden_flags
-	${ARMADILLO_LIBRARIES}
-	${LAPACK_LIBARIES}
-	${BLAS_LIBARIES}
+	-O2 blas lapack
 	)
-target_compile_options(ksburden PRIVATE -O1  ${BLAS_LINKER_FLAGS} ${LAPACK_LINKER_FLAGS})
 target_compile_features(ksburden PRIVATE cxx_range_for)
