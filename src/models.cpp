@@ -1,4 +1,3 @@
-#include <armadillo>
 #include <models.h>
 
 using namespace arma;
@@ -54,6 +53,7 @@ double models::cmc(const Mat<int> &genotypes, const Col<int> &phenotype)
   test_statistic = pow(test_statistic, 2);
   return test_statistic;
 }
+
 double models::permutation(model_members model, int iteration,
                            const Mat<int> &genotypes, Col<int> phenotype,
                            int max_iteration) {
@@ -68,6 +68,7 @@ double models::permutation(model_members model, int iteration,
     double iteration_test_statistic = (this->*model)(genotypes, phenotype);
     if (iteration_test_statistic >= test_statistic)
       larger += 1;
+    i += 1;
     if ( i >= max_iteration) break;
   }
 
