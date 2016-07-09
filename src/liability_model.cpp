@@ -78,7 +78,6 @@ uvec LiabilityModel::simulate_data(Col<int> causal) {
   boost::math::normal dist(0.0, 1.0);
   q = quantile(dist, 1-life_time_risk);
 
-  vec liability_dist;
   while (counter_num_controls < num_controls || counter_num_cases < num_cases) {
 
     liability_dist =

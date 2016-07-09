@@ -19,6 +19,7 @@ public:
 	int num_cases;
 	int num_controls;
 	int num_subjects = num_cases + num_controls;
+	arma::vec liability_dist;
 	double wished_effect;
 	double life_time_risk;
 	arma::vec normal_random(int n, double mean, double stdev);
@@ -31,6 +32,7 @@ public:
 
         LiabilityModel(std::string vcf_file, std::string variant_file)
 		: LoadVCF(vcf_file, variant_file) {};
+	LiabilityModel();
 };
 
 #endif /* LIABILITY_MODEL_H */
