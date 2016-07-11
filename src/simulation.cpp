@@ -17,6 +17,7 @@ int main(int argc, char *argv[]) {
   sim.standardize_matrix();
 
   sim.life_time_risk = fLD::FLAGS_lifetimerisk;
+
   sim.num_controls = 500;
   sim.num_cases = 500;
 
@@ -24,11 +25,14 @@ int main(int argc, char *argv[]) {
   int num_models = 3; int m;
   models instance;
 
+  // output storage
   arma::mat pvalues_output(fLI::FLAGS_powerIter, num_models);
   pvalues_output.zeros();
 
   auto causal_variants = sim.generate_causal_variants(true);
   int i = 0;
+
+  // dummy phenotype
   arma::Col<int> phenotpe(sim.num_subjects);
   phenotpe.zeros();
   phenotpe.subvec(0, (sim.num_cases - 1)) = 1;

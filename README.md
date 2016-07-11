@@ -1,3 +1,11 @@
+# Installation
+
+1. git clone the repository and go into the `ksburden` folder
+2. use `cmake .`
+3. use `make`
+
+The resulting executable programs should be found in `./bin`
+
 # Troubleshooting
 
 If you get the following error message:

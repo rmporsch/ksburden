@@ -32,7 +32,7 @@ public:
 
         LiabilityModel(std::string vcf_file, std::string variant_file)
 		: LoadVCF(vcf_file, variant_file) {};
-	LiabilityModel();
+	LiabilityModel() : LoadVCF(){};
 };
 
 #endif /* LIABILITY_MODEL_H */

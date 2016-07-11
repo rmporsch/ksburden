@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <VcfFileReader.h>
+#include <easylogging++.h>
 
 using namespace std;
 
@@ -28,13 +29,13 @@ class LoadVCF {
                   reader.open(vcf_file.c_str(), header);
                   reader.readVcfIndex();
                 };
+		LoadVCF(){};
 
                 vector<vector<string>>
                 variant_location(string VarFile, char sep = '\t');
                 vector<string>
                 get_all_genes(vector<vector<string>> &data);
-                vector<vector<string>>
-                get_gene_loc(string gene);
+                vector<vector<string>> get_gene_loc(string gene);
 
                 int get_gene_matrix(vector<vector<string>> geneLoc);
 		void load_gene(string gene_name);

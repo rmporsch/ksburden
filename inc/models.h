@@ -2,6 +2,7 @@
 #define models_H
 
 #include <armadillo>
+#include <easylogging++.h>
 
 class models {
 private:

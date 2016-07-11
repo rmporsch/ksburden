@@ -85,12 +85,13 @@ uvec LiabilityModel::simulate_data(Col<int> causal) {
 
     mat::iterator start = liability_dist.begin();
     mat::iterator end = liability_dist.end();
+
     for (vec::iterator i = start; i != end; ++i) {
-      if (liability_dist(*i) >= q && counter_num_cases < num_cases) {
+      if (*i >= q && counter_num_cases < num_cases) {
         id_num_cases(counter_num_cases) = std::distance(start, i);
         ++counter_num_cases;
       }
-      if (liability_dist(*i) < q && counter_num_controls < num_controls) {
+      if (*i < q && counter_num_controls < num_controls) {
         id_num_controls(counter_num_controls) = std::distance(start, i);
         ++counter_num_controls;
       }
