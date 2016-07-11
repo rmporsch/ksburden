@@ -20,18 +20,14 @@ protected:
 	  test_mat(60, 8) = 1;
 	  test_mat(70, 9) = 1;
   }
-	virtual ~test_liabilitymodel ();
-
-private:
-	
 };
 
 TEST_F(test_liabilitymodel, normal_random) {
-  arma::vec normalr = liabmodel.normal_random(1000, 0, 1);
+  arma::vec normalr = liabmodel.normal_random(10000, 0, 1);
   double mean = arma::mean(normalr);
   double var = arma::var(normalr);
-  EXPECT_FLOAT_EQ(0, mean);
-  EXPECT_FLOAT_EQ(1, var);
+  EXPECT_NEAR(0, mean, 0.05);
+  EXPECT_NEAR(1, var, 0.05);
 }
 
 TEST_F(test_liabilitymodel, uniform_random) {
@@ -56,7 +52,7 @@ TEST_F(test_liabilitymodel, effect_generation) {
   liabmodel.genotype_matrix = test_mat;
   arma::Col<int> causal_var = liabmodel.generate_causal_variants(true);
   arma::vec effect = liabmodel.effect_generation(causal_var);
-  EXPECT_EQ(0.1, sum(effect));
+  EXPECT_NEAR(0.1, pow(sum(effect),2), 0.001);
   EXPECT_EQ(10, effect.size());
 }
 
@@ -64,12 +60,12 @@ TEST_F(test_liabilitymodel, standardize_matrix) {
   liabmodel.num_variants = 10;
   liabmodel.size_cluster = 1;
   liabmodel.genotype_matrix = test_mat;
-  liabmodel.standardize();
+  liabmodel.standardize_matrix();
 
-  EXPECT_EQ(0, mean(liabmodel.genotype_matrix_standarized.col(0)));
-  EXPECT_EQ(1, var(liabmodel.genotype_matrix_standarized.col(0)));
-  EXPECT_EQ(0, mean(liabmodel.genotype_matrix_standarized.col(1)));
-  EXPECT_EQ(1, var(liabmodel.genotype_matrix_standarized.col(1)));
+  EXPECT_NEAR(0, mean(liabmodel.genotype_matrix_standarized.col(0)), 0.0001);
+  EXPECT_NEAR(1, var(liabmodel.genotype_matrix_standarized.col(0)), 0.0001);
+  EXPECT_NEAR(0, mean(liabmodel.genotype_matrix_standarized.col(1)), 0.0001);
+  EXPECT_NEAR(1, var(liabmodel.genotype_matrix_standarized.col(1)), 0.0001);
 }
 
 TEST_F(test_liabilitymodel, simulate_data) {
@@ -77,6 +73,7 @@ TEST_F(test_liabilitymodel, simulate_data) {
   liabmodel.size_cluster = 1;
   liabmodel.wished_effect = 0.1;
   liabmodel.num_cases = 10;
+  liabmodel.life_time_risk = 0.1;
   liabmodel.num_controls = 10;
   liabmodel.genotype_matrix = test_mat;
   liabmodel.standardize_matrix();
@@ -85,6 +82,6 @@ TEST_F(test_liabilitymodel, simulate_data) {
   double mean_risk = mean(liabmodel.liability_dist);
   double var_risk = var(liabmodel.liability_dist);
   EXPECT_EQ(20, sim_id.size());
-  EXPECT_FLOAT_EQ(0, mean_risk);
-  EXPECT_FLOAT_EQ(1, var_risk);
+  EXPECT_NEAR(0, mean_risk, 0.05);
+  EXPECT_NEAR(1, var_risk, 0.05);
 }

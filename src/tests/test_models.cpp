@@ -15,7 +15,7 @@ models_test() {
   test_matrix.set_size(num_subjects, num_variants);
   test_matrix.zeros();
   test_matrix(0, 0) = 1;
-  test_matrix(2, 1) = 1;
+  test_matrix(7, 1) = 1;
 
   test_subjects = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
   phenotype.set_size(10);
@@ -60,9 +60,4 @@ TEST_F(models_test, permutation) {
                                      phenotype, 1));
   EXPECT_GE(1, instance.permutation(instance.model_array[2], 1, test_matrix,
                                       phenotype, 1));
-}
-
-int main(int argc, char *argv[]) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }

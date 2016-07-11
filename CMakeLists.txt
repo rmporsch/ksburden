@@ -49,6 +49,35 @@ add_dependencies(gflags gflagsDown)
 set_property(TARGET gflags PROPERTY IMPORTED_LOCATION ${gflags_DIR}/lib/libgflags.a)
 include_directories(${gflags_DIR}/include/)
 
+# gflags
+ExternalProject_Add(googleTest_git
+	GIT_REPOSITORY https://github.com/google/googletest.git
+       	PREFIX ${LIBRARY_OUTPUT_PATH}/googletest
+	BUILD_IN_SOURCE 1
+	CONFIGURE_COMMAND export CXXFLAGS="-fPIC" && cmake .
+	BUILD_COMMAND make
+	INSTALL_COMMAND ""
+	UPDATE_COMMAND ""
+	)
+
+set(gtest_SOURCE_DIR ${LIBRARY_OUTPUT_PATH}/googletest/src/googleTest_git/googletest)
+include(${gtest_SOURCE_DIR}/cmake/internal_utils.cmake)
+include_directories(
+  ${gtest_SOURCE_DIR}/include
+  ${gtest_SOURCE_DIR})
+link_directories(${gtest_BINARY_DIR}/src)
+cxx_library(gtest "${cxx_strict}" ${gtest_SOURCE_DIR}/src/gtest-all.cc)
+cxx_library(gtest_main "${cxx_strict}" ${gtest_SOURCE_DIR}/src/gtest_main.cc)
+target_link_libraries(gtest_main gtest)
+if (DEFINED CMAKE_VERSION AND NOT "${CMAKE_VERSION}" VERSION_LESS "2.8.11")
+  target_include_directories(gtest      INTERFACE "${gtest_SOURCE_DIR}/include")
+  target_include_directories(gtest_main INTERFACE "${gtest_SOURCE_DIR}/include")
+endif()
+install(TARGETS gtest gtest_main
+  DESTINATION lib)
+install(DIRECTORY ${gtest_SOURCE_DIR}/include/gtest
+  DESTINATION include)
+
 #============
 # LIBSTATGEN
 #============
@@ -117,10 +146,6 @@ set(Armadillo_DIR ${LIBRARY_OUTPUT_PATH}/armadillo-7.100.3/src/ArmadilloDownload
 set(ARMADILLO_LIBRARY ${Armadillo_DIR}/libarmadillo.so)
 set(ARMADILLO_INCLUDE_DIR ${Armadillo_DIR}/include/)
 include_directories(${ARMADILLO_INCLUDE_DIR})
-set(GCC_ARMADILLO_LINK_FLAG "-O1 -lblas -llapack")
-#SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_ARMADILLO_LINK_FLAG}")
-#SET(CMAKE_SHARED_LINKER_FLAGS  "${CMAKE_SHARED_LINKER_FLAGS} ${GCC_ARMADILLO_LINK_FLAG}")
-#FIND_PACKAGE(Armadillo)
 #=============================
 #=============================
 
@@ -195,3 +220,17 @@ target_link_libraries(ksburden
 	-O2 blas lapack
 	)
 target_compile_features(ksburden PRIVATE cxx_range_for)
+
+#tests
+add_executable(tests
+	${CMAKE_SOURCE_DIR}/src/tests/run_tests.cpp)
+target_link_libraries(tests
+	models
+	liabilitymodel
+	loadvcf
+	${ARMADILLO_LIBRARIES}
+	z
+	gtest_main
+	-O2 blas lapack -DEBUG
+	)
+target_compile_features(tests PRIVATE cxx_range_for)
