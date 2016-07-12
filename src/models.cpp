@@ -58,14 +58,14 @@ double models::permutation(model_members model, int iteration,
                            const Mat<int> &genotypes, Col<int> phenotype,
                            int max_iteration) {
   double p_value;
-  int larger = 0;
-  int i=0;
+  int larger = 0; int i=0;
+  Col<int> temp_phenotype(phenotype.size());
 
   double test_statistic = (this->*model)(genotypes, phenotype);
 
   while (i <= iteration || larger < 1) {
-    phenotype = shuffle(phenotype);
-    double iteration_test_statistic = (this->*model)(genotypes, phenotype);
+    temp_phenotype = shuffle(phenotype);
+    double iteration_test_statistic = (this->*model)(genotypes, temp_phenotype);
     if (iteration_test_statistic >= test_statistic)
       larger += 1;
     i += 1;

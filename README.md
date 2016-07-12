@@ -6,6 +6,33 @@
 
 The resulting executable programs should be found in `./bin`
 
+# Usage
+
+## Simulation
+
+Required Flags:
+
+| Flag | Function |
+|======|==========|
+| --genotypes | variant file in vcf format |
+| --variant | list of variants in tab format |
+| --gene | name of gene to do simualtion on |
+
+Optional flags:
+
+| Flag | Function |
+|======|==========|
+| --threads | number of threds to use |
+| --subjects | total number of subjects |
+| --powerIter | number of iteration to calculate power |
+| --verbose | verbose level |
+| --iter | number of iterations |
+| --lifetimerisk | life time risk |
+| --causalVar | number of causal mutations |
+| --outPath | output path of the simulations |
+
+
+
 # Troubleshooting
 
 If you get the following error message:

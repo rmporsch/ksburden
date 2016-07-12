@@ -61,3 +61,26 @@ TEST_F(models_test, permutation) {
   EXPECT_GE(1, instance.permutation(instance.model_array[2], 1, test_matrix,
                                       phenotype, 1));
 }
+
+TEST_F(models_test, actualdata) {
+  std::string ret_genotype_file = "./src/tests/test_data/saved_KIAA0556.csv";
+  arma::Mat<int> ret_mat;
+
+  ret_mat.load(ret_genotype_file);
+
+  int num_cases = 458;
+  int num_controls = 915 - num_cases;
+  arma::Col<int> phenotype(915);
+  phenotype.ones();
+  arma::Col<int> case_vec(num_cases);
+  case_vec.zeros();
+  case_vec = case_vec - 1;
+  phenotype.subvec(num_controls, (915 -1)) = case_vec;
+
+  double test_stat_ks = instance.ksburden(ret_mat, phenotype);
+  double test_stat_burden = instance.burden(ret_mat, phenotype);
+  double test_stat_cmc = instance.cmc(ret_mat, phenotype);
+  EXPECT_NEAR(0.2441, test_stat_ks, 0.0001);
+  EXPECT_FLOAT_EQ(196, test_stat_burden);
+  EXPECT_NEAR(0.000557, test_stat_cmc, 0.0001);
+}

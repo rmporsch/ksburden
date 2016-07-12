@@ -5,7 +5,7 @@
 
 //required
 DEFINE_string(genotypes, "/path/to/genotypes", 
-		"The genotypes. This can be either a vcf file or a non-standardized genotype matrix If its a vcf file then one has also to provide the variant file");
+		"the genotypes in vcf formate.");
 DEFINE_string(variant, "/path/to/varinants", 
 		"This is either a variant file containing the position of each variant in the first column and the genes in the second. Otherwise this is a standardized genotype matrix");
 DEFINE_string(gene, "somegene", "gene name");
@@ -19,10 +19,6 @@ DEFINE_int32(iter, 1000, "number of iterations for tests");
 DEFINE_bool(pvalues, true, "save p-values for each gene");
 DEFINE_bool(storeSim, false, "save simulation IDs for each iteration");
 DEFINE_string(output, "power.txt", "file postfix name of the outputfile");
-DEFINE_bool(ks, true, "perform KS test");
-DEFINE_bool(burden, true, "perform burden test");
-DEFINE_bool(CMC, true, "perform CMC test");
-DEFINE_bool(trackPerformance, false, "track performance of loops");
 DEFINE_double(maxEffect, 0.0100, "maximal effect size");
 DEFINE_double(effectSteps, 0.0010, "effect size steps");
 DEFINE_double(percentageSteps, 0.00, "percentage steps in which the program increases the causal cluster");

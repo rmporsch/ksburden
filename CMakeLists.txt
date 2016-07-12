@@ -204,7 +204,7 @@ target_link_libraries(sim
 	${ARMADILLO_LIBRARIES}
 	z
 	sim_flags
-	-O2 blas lapack
+	-O2 blas lapack -DEBUG
 	)
 target_compile_features(sim PRIVATE cxx_range_for)
 
