@@ -4,8 +4,6 @@
 #include <armadillo>
 #include <easylogging++.h>
 
-using namespace std;
-
 INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char *argv[])
@@ -36,11 +34,12 @@ int main(int argc, char *argv[])
       output[m] = instance.permutation(
           instance.model_array[m], FLAGS_iter, data.genotype_matrix, data.phenotype, 100000);
     }
-    fprintf(fout, "%s\t%f\t%f\t%f\t%i\n", g->c_str(),
+    fprintf(fout, "%s\t%f\t%f\t%f\t%i\n",
+		    g->c_str(),
 		    output[0],
 		    output[1],
 		    output[2],
 		    num_var_gene);
   }
-	return 0;
+  return 0;
 }

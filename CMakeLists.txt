@@ -226,6 +226,7 @@ add_executable(tests
 	${CMAKE_SOURCE_DIR}/src/tests/run_tests.cpp)
 target_link_libraries(tests
 	models
+	analysis
 	liabilitymodel
 	loadvcf
 	${ARMADILLO_LIBRARIES}

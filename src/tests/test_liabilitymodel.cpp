@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <liability_model.h>
+#include <models.h>
 
 class test_liabilitymodel: public testing::Test
 {
@@ -100,3 +101,45 @@ TEST_F(test_liabilitymodel, simulate_data) {
   EXPECT_NEAR(0, mean_risk, 0.10);
   EXPECT_NEAR(1, var_risk, 0.10);
 }
+
+//TEST_F(test_liabilitymodel, realdata) {
+//  std::string ret_genotype_file = "./src/tests/test_data/saved_KIAA0556.csv";
+//  arma::Mat<int> ret_mat;
+//
+//  ret_mat.load(ret_genotype_file);
+//
+//
+//  liabmodel.wished_effect = 0.0;
+//  liabmodel.num_cases = 1000;
+//  liabmodel.num_controls = 1000;
+//  liabmodel.num_subjects = 2000;
+//  liabmodel.life_time_risk = 0.1;
+//  liabmodel.genotype_matrix = ret_mat;
+//  liabmodel.standardize_matrix();
+//
+//  arma::Col<int> phenotpe(liabmodel.num_subjects);
+//  phenotpe.ones();
+//  arma::Col<int> case_vec(liabmodel.num_cases);
+//  case_vec.zeros();
+//  case_vec = case_vec - 1;
+//  phenotpe.subvec(liabmodel.num_controls, (liabmodel.num_subjects -1)) = case_vec;
+//
+//  models instance;
+//  arma::mat pvalues_output(100,3);
+//  pvalues_output.zeros();
+//
+//  auto causal_variants = liabmodel.generate_causal_variants(true);
+//  // power calculations
+//  int i, m;
+//  for (i = 0; i < 100; ++i) {
+//
+//    arma::uvec simulated_pheno_id = liabmodel.simulate_data(causal_variants);
+//    arma::Mat<int> temp_genotypes = liabmodel.genotype_matrix.rows(simulated_pheno_id);
+//
+//    // run models
+//    for (m = 0; m < 3; ++m) {
+//      pvalues_output(i, m) = instance.permutation(
+//          instance.model_array[m], 1000, temp_genotypes, phenotpe, 1001);
+//    }
+//  }
+//}

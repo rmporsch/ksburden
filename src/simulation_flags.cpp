@@ -18,7 +18,7 @@ DEFINE_int32(verbose, 1, "verbose level");
 DEFINE_int32(iter, 1000, "number of iterations for tests");
 DEFINE_bool(pvalues, true, "save p-values for each gene");
 DEFINE_bool(storeSim, false, "save simulation IDs for each iteration");
-DEFINE_string(output, "power.txt", "file postfix name of the outputfile");
+DEFINE_string(out, "power.txt", "file postfix name of the outputfile");
 DEFINE_double(maxEffect, 0.0100, "maximal effect size");
 DEFINE_double(effectSteps, 0.0010, "effect size steps");
 DEFINE_double(percentageSteps, 0.00, "percentage steps in which the program increases the causal cluster");
@@ -27,7 +27,6 @@ DEFINE_double(probSteps, 0.00, "probability steps in which the program increases
 DEFINE_double(maxProb, 1.00, "maximal probability");
 DEFINE_double(lifetimerisk, 0.10, "life time risk in percentage");
 DEFINE_int32(causalVar, 0, "Number of causal mutations, currently mutual exclusive with 'precentageSteps'");
-DEFINE_string(outPath, "", "path for all output files; last character needs to be a /");
 //
 // general stuff
 void sanity_check(int argc, char *argv[]) {

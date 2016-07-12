@@ -54,7 +54,7 @@ TEST_F(models_test, burden) {
 
 TEST_F(models_test, permutation) {
   int num_tests = 3;
-  EXPECT_GE(1, instance.permutation(instance.model_array[1], 1, test_matrix,
+  EXPECT_GE(1, instance.permutation(instance.model_array[0], 1, test_matrix,
                                      phenotype, 1));
   EXPECT_GE(1, instance.permutation(instance.model_array[1], 1, test_matrix,
                                      phenotype, 1));
@@ -83,4 +83,14 @@ TEST_F(models_test, actualdata) {
   EXPECT_NEAR(0.2441, test_stat_ks, 0.0001);
   EXPECT_FLOAT_EQ(196, test_stat_burden);
   EXPECT_NEAR(0.000557, test_stat_cmc, 0.0001);
+
+  EXPECT_NEAR(0.133, instance.permutation(instance.model_array[0], 1000,
+                                          ret_mat, phenotype, 1001),
+              0.03);
+  EXPECT_NEAR(0.118, instance.permutation(instance.model_array[1], 1000,
+                                          ret_mat, phenotype, 1001),
+              0.03);
+  EXPECT_NEAR(0.184, instance.permutation(instance.model_array[2], 1000,
+                                          ret_mat, phenotype, 1001),
+              0.03);
 }

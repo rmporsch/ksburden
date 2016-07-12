@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  pvalues_output.save("sometest.csv", arma::csv_ascii);
+  pvalues_output.save(fLS::FLAGS_out, arma::csv_ascii);
   LOG(INFO) << "Simulation finished";
 
   return 0;

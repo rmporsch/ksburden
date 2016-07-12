@@ -11,26 +11,15 @@ using namespace std;
 using namespace arma;
 
 
-vector<string> analysis::split(string str, char delimiter) {
-  vector<string> internal;
-  stringstream ss(str); // Turn the string into a stream.
-  string tok;
-  
-  while(getline(ss, tok, delimiter)) {
-    internal.push_back(tok);
-  }
-  
-  return internal;
-}
-
 void analysis::pedigree(string ped_file, char sep, vector<string> vcfID) {
 
   ped = variant_location(ped_file, sep); // can use the same function
   vector<int> vcfOrder;
   vector<int> pheno;
   vector<string>::iterator it;
+  int num_subjects_ped = ped.size();
 
-  LOG(INFO) << "Number of samples in ped file: " << num_subjects << "\n";
+  LOG(INFO) << "Number of samples in ped file: " << num_subjects_ped << "\n";
   vector<string> excludeSubjects;
   int i = 0;
   for (auto row = ped.begin(); row != ped.end(); ++row) {

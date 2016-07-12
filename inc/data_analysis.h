@@ -16,7 +16,6 @@ public:
   int num_subjects = ped.size();
   std::vector<std::string> name_subjects;
 
-  std::vector<std::string> split(std::string str, char delimiter);
   void pedigree(std::string ped_file, char sep, std::vector<std::string> vcfID);
   std::vector<std::string> sampleNames(VcfHeader& header);
 
@@ -25,6 +24,7 @@ public:
     name_subjects = sampleNames(header);
     pedigree(ped_file, '\t', name_subjects);
   };
+  analysis(){};
 };
 #endif
 

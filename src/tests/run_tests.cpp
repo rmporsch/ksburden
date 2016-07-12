@@ -3,6 +3,7 @@
 #include "./test_models.cpp"
 #include "./test_loadvcf.cpp"
 #include "./test_liabilitymodel.cpp"
+#include "./test_analysis.cpp"
 
 INITIALIZE_EASYLOGGINGPP
 
