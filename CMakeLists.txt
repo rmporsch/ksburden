@@ -181,6 +181,9 @@ add_dependencies(analysis ArmadilloDownload loadvcf)
 target_link_libraries(analysis loadvcf)
 target_compile_features(analysis PRIVATE cxx_range_for)
 
+
+
+
 # sim_flags
 add_library(sim_flags SHARED "src/simulation_flags.cpp")
 add_dependencies(sim_flags gflags)
@@ -202,17 +205,18 @@ install(TARGETS models loadvcf liabilitymodel sim_flags analysis DESTINATION lib
 #=========
 
 # simulation program
-#add_executable(sim ${CMAKE_SOURCE_DIR}/src/simulation.cpp)
-#target_link_libraries(sim
-#	models
-#	liabilitymodel
-#	loadvcf
-#	${ARMADILLO_LIBRARIES}
-#	z
-#	sim_flags
-#	-O2 blas lapack -DEBUG
-#	)
-#target_compile_features(sim PRIVATE cxx_range_for)
+add_executable(sim ${CMAKE_SOURCE_DIR}/src/sim.cpp)
+target_link_libraries(sim
+	simulation
+	models
+	liabilitymodel
+	loadvcf
+	${ARMADILLO_LIBRARIES}
+	z
+	sim_flags
+	-O2 blas lapack -DEBUG
+	)
+target_compile_features(sim PRIVATE cxx_range_for)
 
 # analysis program
 add_executable(ksburden ${CMAKE_SOURCE_DIR}/src/ksburden.cpp)

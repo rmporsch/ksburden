@@ -23,9 +23,23 @@ public:
 	double min_percentage;
 	double steps_percentage;
 
+        int input_num_cases;
+	int input_num_controls;
 
-        Simulation(std::string vcf_file, std::string variant_file)
-            : LiabilityModel(vcf_file, variant_file){};
+        Simulation(std::string vcf_file, std::string variant_file,
+                   int input_num_cases, int input_num_controls)
+            : LiabilityModel(vcf_file, variant_file) {
+
+          num_cases = input_num_cases;
+          num_controls = input_num_controls;
+          num_subjects = num_cases + num_controls;
+          phenotype.set_size(input_num_cases + input_num_controls);
+          phenotype.ones();
+          arma::Col<int> case_vec(num_cases);
+          case_vec.zeros();
+          case_vec = case_vec - 1;
+          phenotype.subvec(num_controls, (num_subjects - 1)) = case_vec;
+        };
         Simulation() : LiabilityModel(){};
 
         void select_test(std::string tests_input);
