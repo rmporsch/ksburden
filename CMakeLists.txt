@@ -169,6 +169,12 @@ add_dependencies(liabilitymodel ArmadilloDownload loadvcf)
 target_link_libraries(liabilitymodel loadvcf)
 target_compile_features(liabilitymodel PRIVATE cxx_range_for)
 
+# simulation_model
+add_library(simulation SHARED "src/simulation.cpp")
+add_dependencies(simulation ArmadilloDownload loadvcf models liabilitymodel)
+target_link_libraries(simulation loadvcf models liabilitymodel)
+target_compile_features(simulation PRIVATE cxx_range_for)
+
 # analysis
 add_library(analysis SHARED "src/data_analysis.cpp")
 add_dependencies(analysis ArmadilloDownload loadvcf)
@@ -182,7 +188,7 @@ target_link_libraries(sim_flags gflags pthread)
 target_compile_features(sim_flags PRIVATE cxx_range_for)
 # see https://github.com/halide/Halide/issues/175 why I added 'pthread'
 
-# sim_flags
+# ksburden_flags
 add_library(ksburden_flags SHARED "src/flags_ksburden.cpp")
 add_dependencies(ksburden_flags gflags)
 target_link_libraries(ksburden_flags gflags pthread)
@@ -196,17 +202,17 @@ install(TARGETS models loadvcf liabilitymodel sim_flags analysis DESTINATION lib
 #=========
 
 # simulation program
-add_executable(sim ${CMAKE_SOURCE_DIR}/src/simulation.cpp)
-target_link_libraries(sim
-	models
-	liabilitymodel
-	loadvcf
-	${ARMADILLO_LIBRARIES}
-	z
-	sim_flags
-	-O2 blas lapack -DEBUG
-	)
-target_compile_features(sim PRIVATE cxx_range_for)
+#add_executable(sim ${CMAKE_SOURCE_DIR}/src/simulation.cpp)
+#target_link_libraries(sim
+#	models
+#	liabilitymodel
+#	loadvcf
+#	${ARMADILLO_LIBRARIES}
+#	z
+#	sim_flags
+#	-O2 blas lapack -DEBUG
+#	)
+#target_compile_features(sim PRIVATE cxx_range_for)
 
 # analysis program
 add_executable(ksburden ${CMAKE_SOURCE_DIR}/src/ksburden.cpp)

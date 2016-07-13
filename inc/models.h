@@ -7,6 +7,7 @@
 class models {
 private:
 public:
+  std::vector<std::string> available_tests;
   typedef double (models::*model_members)(const arma::Mat<int> &genotypes,
                                           const arma::Col<int> &phenotpe);
 
@@ -29,6 +30,10 @@ public:
     model_array[0] = &models::ksburden;
     model_array[1] = &models::burden;
     model_array[2] = &models::cmc;
+
+    available_tests[0] = "ksburden";
+    available_tests[1] = "burden";
+    available_tests[2] = "cmc";
   };
 };
 
