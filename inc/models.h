@@ -27,10 +27,12 @@ public:
 
   model_members model_array[3] = {NULL};
   models() {
+
     model_array[0] = &models::ksburden;
     model_array[1] = &models::burden;
     model_array[2] = &models::cmc;
 
+    available_tests.resize(3);
     available_tests[0] = "ksburden";
     available_tests[1] = "burden";
     available_tests[2] = "cmc";

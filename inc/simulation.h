@@ -22,6 +22,7 @@ public:
 	double max_percentage;
 	double min_percentage;
 	double steps_percentage;
+        arma::mat pvalues_output;
 
         int input_num_cases;
 	int input_num_controls;
@@ -35,6 +36,7 @@ public:
           num_subjects = num_cases + num_controls;
           phenotype.set_size(input_num_cases + input_num_controls);
           phenotype.ones();
+
           arma::Col<int> case_vec(num_cases);
           case_vec.zeros();
           case_vec = case_vec - 1;

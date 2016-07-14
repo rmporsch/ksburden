@@ -20,6 +20,7 @@ DECLARE_bool(trackPerformance);
 DECLARE_bool(storeSim);
 DECLARE_bool(pvalues);
 DECLARE_string(out);
+DECLARE_string(path);
 
 DECLARE_double(maxEffect);
 DECLARE_double(minEffect);

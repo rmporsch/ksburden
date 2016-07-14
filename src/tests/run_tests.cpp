@@ -4,6 +4,7 @@
 #include "./test_loadvcf.cpp"
 #include "./test_liabilitymodel.cpp"
 #include "./test_analysis.cpp"
+#include "./test_simulation.cpp"
 
 INITIALIZE_EASYLOGGINGPP
 

@@ -235,6 +235,7 @@ target_compile_features(ksburden PRIVATE cxx_range_for)
 add_executable(tests
 	${CMAKE_SOURCE_DIR}/src/tests/run_tests.cpp)
 target_link_libraries(tests
+	simulation
 	models
 	analysis
 	liabilitymodel
