@@ -13,7 +13,7 @@ The resulting executable programs should be found in `./bin`
 Required Flags:
 
 | Flag | Function |
-|======|==========|
+| ---- | -------- |
 | --genotypes | variant file in vcf format |
 | --variant | list of variants in tab format |
 | --gene | name of gene to do simualtion on |
@@ -21,7 +21,7 @@ Required Flags:
 Optional flags:
 
 | Flag | Function |
-|======|==========|
+| ------ | ------- |
 | --threads | number of threds to use |
 | --subjects | total number of subjects |
 | --powerIter | number of iteration to calculate power |
