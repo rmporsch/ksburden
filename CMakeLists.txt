@@ -61,7 +61,7 @@ ExternalProject_Add(googleTest_git
 	)
 
 set(gtest_SOURCE_DIR ${LIBRARY_OUTPUT_PATH}/googletest/src/googleTest_git/googletest)
-include(${gtest_SOURCE_DIR}/cmake/internal_utils.cmake)
+include(lib/internal_utils.cmake)
 include_directories(
   ${gtest_SOURCE_DIR}/include
   ${gtest_SOURCE_DIR})

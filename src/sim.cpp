@@ -46,6 +46,7 @@ int main(int argc, char *argv[]) {
   int sim_id = 0;
   while (cover_full_gene) {
     cover_full_gene = sim.num_causal_var();
+    causal_variants = sim.generate_causal_variants(true);
     std::cout << sim.current_percentage << std::endl;
     sim.wished_effect = FLAGS_minEffect;
     while (sim.wished_effect <= FLAGS_maxEffect) {
