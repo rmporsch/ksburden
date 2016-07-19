@@ -93,4 +93,12 @@ TEST_F(test_simulation, power_calculation) {
   EXPECT_NEAR(0.05, sim.power(2), 0.04);
 }
 
-
+TEST_F(test_simulation, writehead) {
+	std::string test_string = "ksburden,burden";
+	sim.select_test(test_string);
+	FILE * pFile = std::fopen("sometest.txt", "w");
+	sim.writehead(pFile);
+	std::cout << sim.id_perform_models.size() << std::endl;
+	std::cout << sim.output_file_body << std::endl;
+	std::cout << sim.output_file_header << std::endl;
+}

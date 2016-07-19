@@ -16,8 +16,9 @@ DEFINE_int32(threads, 1, "number of threads");
 DEFINE_int32(powerIter, 100, "number of iterations to compute the empirical power");
 DEFINE_int32(verbose, 1, "verbose level");
 DEFINE_int32(iter, 1000, "number of iterations for tests");
-DEFINE_int32(numcases, 500, "number of iterations for tests");
-DEFINE_int32(numcontrols, 500, "number of iterations for tests");
+
+DEFINE_int32(numcases, 500, "number of cases");
+DEFINE_int32(numcontrols, 500, "number of controls");
 
 DEFINE_bool(pvalues, true, "save p-values for each gene");
 DEFINE_bool(storeSim, false, "save simulation IDs for each iteration");

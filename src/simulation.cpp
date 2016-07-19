@@ -10,16 +10,16 @@
 void Simulation::select_test(std::string tests_input) {
 	std::istringstream ss(tests_input);
 	std::string token;
-	std::vector<std::string> perfrom_tests;
+	perform_tests.resize(0);
 
 	while (std::getline(ss, token, ',')) {
-		perfrom_tests.push_back(token);
+		perform_tests.push_back(token);
 	}
 	id_perform_models.resize(0);
 
-        for (int i = 0; i < perfrom_tests.size(); ++i) {
+        for (int i = 0; i < perform_tests.size(); ++i) {
 
-          if (std::find(available_tests.begin(), available_tests.end(), perfrom_tests[i]) !=
+          if (std::find(available_tests.begin(), available_tests.end(), perform_tests[i]) !=
               available_tests.end()) {
 		  id_perform_models.push_back(i);
           }
@@ -32,6 +32,7 @@ int i;
 std::vector<int>::iterator m;
 pvalues_output.set_size(power_iter, id_perform_models.size());
 pvalues_output.ones();
+omp_set_dynamic(threads);
 #pragma omp parallel for private(m)
 for (i = 0; i < power_iter; ++i) {
 
@@ -68,17 +69,53 @@ bool Simulation::num_causal_var() {
     int temp_size_cluster =
         std::floor((num_variants * current_percentage) + 0.0001);
 
-    while (temp_size_cluster < size_cluster) {
+    while (temp_size_cluster <= size_cluster) {
       current_percentage += steps_percentage;
-      int temp_size_cluster =
+      temp_size_cluster =
           std::floor((num_variants * current_percentage) + 0.0001);
     }
     size_cluster = temp_size_cluster;
+    std::cout << size_cluster << std::endl;
 
     if (size_cluster >= num_variants) {
       return false;
     } else {
       return true;
     }
+  }
+}
+
+void Simulation::writehead(FILE *pFile) {
+    for (int i = 0; i < perform_tests.size(); ++i) {
+      output_file_body = "%f\t" + output_file_body;
+      output_file_header = "%s\t" + output_file_header;
+    }
+    switch (perform_tests.size()) {
+      case 1
+          : fprintf(pFile, output_file_header.c_str(), perform_tests[0].c_str(),
+                    "percentage", "num_car", "effect_size", "simID");
+      break;
+    case 2:
+      fprintf(pFile, output_file_header.c_str(), perform_tests[0].c_str(),
+              perform_tests[1].c_str(), "percentage", "num_car", "effect_size",
+              "simID");
+      break;
+    case 3:
+      fprintf(pFile, output_file_header.c_str(), perform_tests[0].c_str(),
+              perform_tests[1].c_str(), perform_tests[2].c_str(), "percentage",
+              "num_car", "effect_size", "simID");
+      break;
+    }
+}
+
+void Simulation::writeoutput(FILE *pFile, ...) {
+  if (!wrote_head) {
+    writehead(pFile);
+    wrote_head = true;
+  } else {
+  va_list argptr;
+  va_start(argptr, output_file_body.c_str());
+  vfprintf(pFile, output_file_body.c_str(), argptr);
+  va_end(argptr);
   }
 }
