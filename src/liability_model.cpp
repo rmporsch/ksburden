@@ -48,6 +48,7 @@ Col<int> LiabilityModel::generate_causal_variants(bool EmptyStart) {
   int start;
   int emptySpace = num_variants - size_cluster * num_cluster;
   int sizeEmpty = size_cluster-1;
+  Col<int> c_vec(size_cluster, fill::ones);
 
   if (EmptyStart) {
     start = sizeEmpty;
@@ -55,15 +56,17 @@ Col<int> LiabilityModel::generate_causal_variants(bool EmptyStart) {
     start = 0;
   }
 
-  int i = 0;
-  while (i < num_cluster) {
-    causal.subvec(start, start + size_cluster - 1) =
-        bernulli(causal_probability, size_cluster);
+  causal.subvec(start, start + size_cluster - 1) = c_vec;
 
-    i++;
-    start = start + size_cluster;
-    start = start + sizeEmpty;
-  }
+  //int i = 0;
+  //while (i < num_cluster) {
+  //  //causal.subvec(start, start + size_cluster - 1) =
+  //  //    bernulli(causal_probability, size_cluster);
+
+  //  i++;
+  //  start = start + size_cluster;
+  //  start = start + sizeEmpty;
+  //}
   VLOG(9) << "simulated " << sum(causal) << " causal mutations"
           << " with probability " << causal_probability;
   return causal;
