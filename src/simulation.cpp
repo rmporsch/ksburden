@@ -44,12 +44,14 @@ std::vector<int>::iterator m;
 pvalues_output.set_size(power_iter, id_perform_models.size());
 pvalues_output.ones();
 omp_set_dynamic(threads);
+saveSim.set_size(power_iter, num_subjects);
 #pragma omp parallel for private(m)
 for (i = 0; i < power_iter; ++i) {
 
     arma::uvec simulated_pheno_id = simulate_data(causal_variants);
     arma::Mat<int> temp_genotypes =
         genotype_matrix.rows(simulated_pheno_id);
+    saveSim.row(i) = arma::conv_to<arma::Row<int>>::from(simulated_pheno_id);
     //temp_genotypes.save("saved_sim_genotypes.txt", arma::csv_ascii);
     // run models
     for (m=id_perform_models.begin(); m<id_perform_models.end(); ++m) {

@@ -20,6 +20,7 @@ public:
   std::vector<int> id_perform_models; /*!< integer vector of models to perform */
   std::vector<std::string> perform_tests;  /*!< vector with the names of models to compute */
   arma::vec power; /*!< output vector containing the stat. power of a simulation*/
+  arma::Mat<int> saveSim; /*! matrix which holds all simulations */
 
   int fixed_causal_var; /*!< fixed number of causal variants */
   double current_percentage; /*!< current percentage of the gene coverd by causal mutations*/

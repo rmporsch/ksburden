@@ -67,6 +67,9 @@ int main(int argc, char *argv[]) {
       sim.wished_effect += FLAGS_effectSteps;
       std::string output = FLAGS_path + std::to_string(sim_id) + FLAGS_out;
       sim.pvalues_output.save(output, arma::csv_ascii);
+      std::string output_sim =
+          FLAGS_path + std::to_string(sim_id) + "_sim_" + FLAGS_out;
+      sim.saveSim.save(output_sim, arma::csv_ascii);
       sim_id += 1;
       std::cout << sim_id << std::endl;
 
