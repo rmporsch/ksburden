@@ -50,36 +50,6 @@ add_dependencies(gflags gflagsDown)
 set_property(TARGET gflags PROPERTY IMPORTED_LOCATION ${gflags_DIR}/lib/libgflags.a)
 include_directories(${gflags_DIR}/include/)
 
-# gflags
-ExternalProject_Add(googleTest_git
-	GIT_REPOSITORY https://github.com/google/googletest.git
-       	PREFIX ${LIBRARY_OUTPUT_PATH}/googletest
-	BUILD_IN_SOURCE 1
-	CONFIGURE_COMMAND export CXXFLAGS="-fPIC" && cmake .
-	BUILD_COMMAND make
-	INSTALL_COMMAND ""
-	UPDATE_COMMAND ""
-	)
-
-set(gtest_SOURCE_DIR ${LIBRARY_OUTPUT_PATH}/googletest/src/googleTest_git/googletest)
-include(lib/internal_utils.cmake)
-include_directories(
-  ${gtest_SOURCE_DIR}/include
-  ${gtest_SOURCE_DIR})
-link_directories(${gtest_BINARY_DIR}/src)
-cxx_library(gtest "${cxx_strict}" ${gtest_SOURCE_DIR}/src/gtest-all.cc)
-cxx_library(gtest_main "${cxx_strict}" ${gtest_SOURCE_DIR}/src/gtest_main.cc)
-add_dependencies(gtest googleTest_git)
-target_link_libraries(gtest_main gtest)
-if (DEFINED CMAKE_VERSION AND NOT "${CMAKE_VERSION}" VERSION_LESS "2.8.11")
-  target_include_directories(gtest      INTERFACE "${gtest_SOURCE_DIR}/include")
-  target_include_directories(gtest_main INTERFACE "${gtest_SOURCE_DIR}/include")
-endif()
-install(TARGETS gtest gtest_main
-  DESTINATION lib)
-install(DIRECTORY ${gtest_SOURCE_DIR}/include/gtest
-  DESTINATION include)
-
 #============
 # LIBSTATGEN
 #============
@@ -88,7 +58,7 @@ ExternalProject_Add(libStatGen
 	PREFIX ${LIBRARY_OUTPUT_PATH}/libStatGen
 	CONFIGURE_COMMAND ""
 	BUILD_IN_SOURCE 1
-	BUILD_COMMAND make
+	BUILD_COMMAND make CFLAGS='-fPIC'
 	INSTALL_COMMAND ""
 	UPDATE_COMMAND ""
 	)
@@ -234,8 +204,26 @@ target_link_libraries(ksburden
 target_compile_features(ksburden PRIVATE cxx_range_for)
 
 #tests
-add_executable(tests
-	${CMAKE_SOURCE_DIR}/src/tests/run_tests.cpp)
+add_executable(tests ${CMAKE_SOURCE_DIR}/src/tests/run_tests.cpp)
+
+# gflags
+ExternalProject_Add(googleTest_git
+	GIT_REPOSITORY https://github.com/google/googletest.git
+       	PREFIX ${LIBRARY_OUTPUT_PATH}/googletest
+	CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_SOURCE_DIR}
+	UPDATE_COMMAND ""
+	)
+
+ExternalProject_Get_Property(googleTest_git install_dir)
+include_directories(${install_dir}/include)
+set(gtest_SOURCE_DIR ${LIBRARY_OUTPUT_PATH}/googletest/src/googleTest_git/googletest)
+include_directories(
+  ${gtest_SOURCE_DIR}/include
+  ${gtest_SOURCE_DIR})
+set(gtest_main ${LIBRARY_OUTPUT_PATH}/libgtest_main.a)
+set(gtest ${LIBRARY_OUTPUT_PATH}/libgtest.a)
+
+add_dependencies(tests googleTest_git)
 target_link_libraries(tests
 	simulation
 	models
@@ -244,7 +232,7 @@ target_link_libraries(tests
 	loadvcf
 	${ARMADILLO_LIBRARIES}
 	z
-	gtest_main
+	${gtest}
 	-O2 blas lapack -DEBUG
 	)
 target_compile_features(tests PRIVATE cxx_range_for)
