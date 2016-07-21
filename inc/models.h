@@ -4,10 +4,20 @@
 #include <armadillo>
 #include <easylogging++.h>
 
+/*! \brief Models
+ *
+ * Containing all the different models including a permutation function.
+ * Each model can be called by its pointer
+ */
 class models {
 private:
 public:
-  std::vector<std::string> available_tests;
+  std::vector<std::string> available_tests; /*!< a vector of strings with available models */
+
+  /*! specifying the typdef for each model
+   *
+   * This is used as a paramter in the permutation function 
+   */
   typedef double (models::*model_members)(const arma::Mat<int> &genotypes,
                                           const arma::Col<int> &phenotpe);
 
@@ -25,7 +35,9 @@ public:
                      const arma::Mat<int> &genotypes, arma::Col<int> phenotype,
                      int max_iteration);
 
-  model_members model_array[3] = {NULL};
+  model_members model_array[3] = {NULL}; /*!< array of pointers to each model function */
+  /*! Model Constructir
+   */
   models() {
 
     model_array[0] = &models::ksburden;

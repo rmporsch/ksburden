@@ -2,8 +2,11 @@
 
 using namespace arma;
 
-/**
- * Function to compute cumulative distribution function on genotypes
+/*! \brief Function to compute cumulative distribution function on genotypes
+ *
+ * \param genotypes a genotype matrix
+ * \param subjects vector of row IDs of genotype matrix
+ * \returns a vector of the ecdf
  */
 vec models::edf(const Mat<int> &genotypes, const uvec &subjects) {
   Row<int> variantSum(genotypes.n_cols, fill::zeros);
@@ -15,6 +18,12 @@ vec models::edf(const Mat<int> &genotypes, const uvec &subjects) {
   return out;
 }
 
+/*! \brief ks-test
+ *
+ * \param genotypes a genotype matrix
+ * \param phenotype the phenotype
+ * \returns the ks test statistics
+ */
 double models::ksburden(const Mat<int> &genotypes, const Col<int> &phenotype)
 {
   double test_statistic;
@@ -29,12 +38,24 @@ double models::ksburden(const Mat<int> &genotypes, const Col<int> &phenotype)
   return test_statistic;
 }
 
+/*! \brief burden-test
+ *
+ * \param genotypes a genotype matrix
+ * \param phenotype the phenotype
+ * \returns the burden test statistics
+ */
 double models::burden(const Mat<int> &genotypes, const Col<int> &phenotype)
 {
   double test_statistic = pow(sum(phenotype.t() * genotypes),2);
   return test_statistic;
 }
 
+/*! \brief cmc-test
+ *
+ * \param genotypes a genotype matrix
+ * \param phenotype the phenotype
+ * \returns the cmc test statistics
+ */
 double models::cmc(const Mat<int> &genotypes, const Col<int> &phenotype)
 {
   double test_statistic;
@@ -54,6 +75,16 @@ double models::cmc(const Mat<int> &genotypes, const Col<int> &phenotype)
   return test_statistic;
 }
 
+/*! computes p-values given a model
+ *
+ * \param model a pointer to the model function
+ * \param iteration number of iteration
+ * \param genotypes a genotype matrix
+ * \param phenotype the phenotype
+ * \param max_iteration the amximal number of iterations
+ *
+ * \return a p-value
+ */
 double models::permutation(model_members model, int iteration,
                            const Mat<int> &genotypes, Col<int> phenotype,
                            int max_iteration) {

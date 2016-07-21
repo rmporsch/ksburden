@@ -11,12 +11,11 @@
 using namespace std;
 using namespace arma;
 
-/*
- * Function to read the varinat location file
+/*! \brief Function to read the varinat location file
  *
- * VarFile File of containing the variants
- * sep seperator of VarFile default is '\t'
- * returns a vector of vector<string> containing the content of the file
+ * \param VarFile File of containing the variants
+ * \param sep seperator of VarFile default is '\t'
+ * \returns a vector of vector<string> containing the content of the file
  *
  * Imput file requires that the first two columns contain the chr and pos.
  * The third column contains the gene name or pathway
@@ -47,12 +46,11 @@ vector <vector <string> > LoadVCF::variant_location(std::string VarFile, char se
 	return data;
 }
 
-/*
- * GetAllGenes
- *
+/*! \brief GetAllGenes
  * extracts all genes or pathways mentioned in data
  *
- * data the result from variantLocation()
+ * \param data the result from variantLocation()
+ * \returns a vector of gene names
  */
 vector <string> LoadVCF::get_all_genes(vector <vector <string> >& data)
 {
@@ -70,13 +68,11 @@ vector <string> LoadVCF::get_all_genes(vector <vector <string> >& data)
 }
 
 
-/*
- * getGeneLoc
+/*! \brief getGeneLoc
  *
  * extracts location of a given gene
  *
- * data the result from variantLocation()
- * gene the gene name
+ * \param gene the gene name
  *
  */
 vector <vector <string> > LoadVCF::get_gene_loc(string gene)
@@ -92,13 +88,11 @@ vector <vector <string> > LoadVCF::get_gene_loc(string gene)
 	return positionGene;
 }
 
-/*
- * getGene
+/*! \brief getGene
  *
  * extracts the genotype matrix of a given gene
  *
- * geneLoc the result from getGeneLoc()
- * reader the vcf file reader (needs to have read the index file as well)
+ * \param geneLoc the result from getGeneLoc()
  *
  */
 int LoadVCF::get_gene_matrix(vector<vector<string>> geneLoc) {
@@ -157,6 +151,12 @@ int LoadVCF::get_gene_matrix(vector<vector<string>> geneLoc) {
         return 0;
 }
 
+/*! \brief loads the genotype matrix
+ *
+ * \param gene_name a string with a gene name
+ *
+ * its a simple warpper function for get_gene_loc and get_gene_matrix
+ */
 void LoadVCF::load_gene(string gene_name)
 {
 	auto gene_loc = get_gene_loc(gene_name);
@@ -164,6 +164,11 @@ void LoadVCF::load_gene(string gene_name)
 }
 
 
+/*! \brief generates a genotype matrix
+ *
+ * \param subjects number of subjects to simulate
+ * \param variants number of variants
+ */
 int LoadVCF::generate_genotype_matrix(int subjects, int variants) {
   int i;
   double variantMAF;
@@ -194,6 +199,11 @@ int LoadVCF::generate_genotype_matrix(int subjects, int variants) {
   return 0;
 }
 
+/*! \brief generates a bernulli distribution
+ *
+ * \param p probability
+ * \param n size of the distribution
+ */
 Col<int> LoadVCF::bernulli(double p, int n) {
   Col<int> dat(n);
   bernoulli_distribution distribution(p);
@@ -202,4 +212,3 @@ Col<int> LoadVCF::bernulli(double p, int n) {
   }
   return dat;
 }
-

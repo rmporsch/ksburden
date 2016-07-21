@@ -11,6 +11,12 @@ using namespace std;
 using namespace arma;
 
 
+/*! \brief imports the pedigree file
+ *
+ * \param ped_file path to ped file
+ * \param sep seperator of the ped file
+ * \param vcfID subject names from the vcf file
+ */
 void analysis::pedigree(string ped_file, char sep, vector<string> vcfID) {
 
   ped = variant_location(ped_file, sep); // can use the same function
@@ -48,6 +54,10 @@ void analysis::pedigree(string ped_file, char sep, vector<string> vcfID) {
   LOG(INFO) << "Proceeding with " << vcfOrder.size() << " subjects";
 }
 
+/*! \brief gets the sample names from a vcf file
+ *
+ * \param header the header of the vcf file
+ */
 vector<string> analysis::sampleNames(VcfHeader& header) {
   vector<string> sNames;
   int nSamples = header.getNumSamples();

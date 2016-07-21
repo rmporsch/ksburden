@@ -7,21 +7,30 @@
 #include <easylogging++.h>
 #include <boost/math/distributions/normal.hpp>
 
+/*! \brief Generates a liability model given paramters 
+ *
+ * This class does the heavy lifting of the simulation by
+ * generating disease affected and unaffected subjects based on a given 
+ * genotype matrix. It is fairly simple writen. In addtion there are also
+ * some helper function included. The main function is simulate_data which does 
+ * most of the work.
+ */
 class LiabilityModel : public LoadVCF
 {
 private:
 	
 
 public:
-	int num_cluster = 1;
-	int size_cluster = 1;
-	double causal_probability = 1.0;
-	int num_cases;
-	int num_controls;
-	int num_subjects = num_cases + num_controls;
-	arma::vec liability_dist;
-	double wished_effect;
-	double life_time_risk;
+	int num_cluster = 1; /*!< number of clusters */
+	int size_cluster = 1; /*!< size of eachj cluster*/
+	double causal_probability = 1.0; /*!< mutation probability in cluster */
+	int num_cases; /*!< number of cases to simulate */
+	int num_controls; /*!< number of controls to simulate */
+	int num_subjects = num_cases + num_controls; /*!< number of subjects to simulate */
+	arma::vec liability_dist; /*!< vector of the liabilities of each subject */
+	double wished_effect; /*!< desired effect size */
+	double life_time_risk; /*!< life time risk in percentage */
+
 	arma::vec normal_random(int n, double mean, double stdev);
 	arma::vec uniform_random(int n);
 	arma::Col<int> generate_causal_variants(bool EmptyStart);

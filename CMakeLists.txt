@@ -7,6 +7,7 @@ set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 include_directories(inc)
+set( CMAKE_EXPORT_COMPILE_COMMANDS 1 )
 
 # ==========
 # Check compiler version
@@ -68,7 +69,7 @@ include_directories(
 link_directories(${gtest_BINARY_DIR}/src)
 cxx_library(gtest "${cxx_strict}" ${gtest_SOURCE_DIR}/src/gtest-all.cc)
 cxx_library(gtest_main "${cxx_strict}" ${gtest_SOURCE_DIR}/src/gtest_main.cc)
-add_dependencies(gtest, googleTest_git)
+add_dependencies(gtest googleTest_git)
 target_link_libraries(gtest_main gtest)
 if (DEFINED CMAKE_VERSION AND NOT "${CMAKE_VERSION}" VERSION_LESS "2.8.11")
   target_include_directories(gtest      INTERFACE "${gtest_SOURCE_DIR}/include")

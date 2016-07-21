@@ -7,6 +7,9 @@
 #include <models.h>
 #include <algorithm>
 
+/*! \brief helper function fo select tests
+ * \param test_input a string of tests seperate by comma
+ */
 void Simulation::select_test(std::string tests_input) {
 	std::istringstream ss(tests_input);
 	std::string token;
@@ -26,6 +29,14 @@ void Simulation::select_test(std::string tests_input) {
         }
 }
 
+/*! computes power for a number of models
+ *
+ * Calculates the empirical power for each model. Results are saved into the power vector
+ *
+ * \param power_iter number of iterations to compute power
+ * \param causal_variants a vector of causal variants
+ *
+ */
 void Simulation::power_calculation(int power_iter, arma::Col<int> causal_variants) {
 // power calculations
 int i;
@@ -39,6 +50,7 @@ for (i = 0; i < power_iter; ++i) {
     arma::uvec simulated_pheno_id = simulate_data(causal_variants);
     arma::Mat<int> temp_genotypes =
         genotype_matrix.rows(simulated_pheno_id);
+    //temp_genotypes.save("saved_sim_genotypes.txt", arma::csv_ascii);
     // run models
     for (m=id_perform_models.begin(); m<id_perform_models.end(); ++m) {
       pvalues_output(i, *m) =
@@ -56,9 +68,16 @@ for (i = 0; i < power_iter; ++i) {
   for(int t_test = 0; t_test < id_perform_models.size(); ++t_test){
     arma::uvec temp = arma::find(pvalues_output.col(t_test) <= 0.05);
     power(t_test) = temp.size() / (double)power_iter;
+    VLOG(9) << "Power for test " << (t_test + 1) << " is " << power(t_test);
   }
 }
 
+/*! define number of causal varinats
+ *
+ * This is a helper function which can take the current and desired 
+ * percentage of a gene covered by causal mutations and defines the raw count of
+ * causal mutations
+ */
 bool Simulation::num_causal_var() {
 
   if (fixed_causal_var > 0) {
@@ -75,7 +94,6 @@ bool Simulation::num_causal_var() {
           std::floor((num_variants * current_percentage) + 0.0001);
     }
     size_cluster = temp_size_cluster;
-    std::cout << size_cluster << std::endl;
 
     if (size_cluster >= num_variants) {
       return false;
@@ -85,6 +103,10 @@ bool Simulation::num_causal_var() {
   }
 }
 
+/*! writes the header of the outputfile
+ *
+ * \param pFile a stream
+ */
 void Simulation::writehead(FILE *pFile) {
     for (int i = 0; i < perform_tests.size(); ++i) {
       output_file_body = "%f\t" + output_file_body;
@@ -108,6 +130,15 @@ void Simulation::writehead(FILE *pFile) {
     }
 }
 
+/*! writes the output file
+ *
+ * \param pFile a stream
+ * \param ... additional things to print into the outputfile
+ *
+ * This is a warpper around writehead. It takes a file name and additional paramters 
+ * to print.  Important is that this function needs to be called first without any additional 
+ * arguments in order to write the header.
+ */
 void Simulation::writeoutput(FILE *pFile, ...) {
   if (!wrote_head) {
     writehead(pFile);

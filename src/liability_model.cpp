@@ -7,6 +7,12 @@
 
 using namespace arma;
 
+/*! \brief normal distribution
+ *
+ * \param n size of the distribition
+ * \param mean the mean
+ * \param stdev the standard deviation
+ */
 vec LiabilityModel::normal_random(int n, double mean, double stdev) {
   vec dat(n);
   normal_distribution<double> distribution(mean, stdev);
@@ -16,6 +22,10 @@ vec LiabilityModel::normal_random(int n, double mean, double stdev) {
   return dat;
 }
 
+/*! \brief unifrom distribution
+ *
+ * \param n size of the distribition
+ */
 vec LiabilityModel::uniform_random(int n) {
   vec dat(n);
   uniform_real_distribution<double> distribution(1, 6);
@@ -25,6 +35,11 @@ vec LiabilityModel::uniform_random(int n) {
   return dat;
 }
 
+/*! \brief declares the causal varinats
+ *
+ * \param EmptyStart should there be no causal variants at the beginning of the gene
+ * \return a vector of integers with either 1 or 0
+ */
 Col<int> LiabilityModel::generate_causal_variants(bool EmptyStart) {
 
   Col<int> causal(num_variants, fill::zeros);
@@ -54,18 +69,33 @@ Col<int> LiabilityModel::generate_causal_variants(bool EmptyStart) {
   return causal;
 }
 
+/*! \brief makes effect size
+ *
+ * \param causal vector of causal mutations
+ * \return effect
+ *
+ * This function standardizes the effect size of all causal variants 
+ * to be unform across the causal mutations. Hence the indicated effect size from wished_effect
+ * indicates the $R^2$ of the intire gene.
+ */
 vec LiabilityModel::effect_generation(Col<int> causal) {
   vec effect(num_variants);
   effect.ones();
   effect = causal % effect;
   effect = sqrt(pow(effect, 2) / as_scalar(sum(pow(effect, 2)) / wished_effect));
-  //std::cout << effect.subvec(0, 20) << std::endl;
   return effect;
 }
 
+/*! \brief generates cases and controls
+ *
+ * \param causal a vector of causal mutations
+ * \returns a vector of IDs from the original genotype matrix
+ *
+ * This is the work horse of the class. It generates a liability distribution
+ * based on the effect size. Case-control status is then decided on the life_time_risk 
+ * This process is repeated until enough cases and controls have been collected.
+ */
 uvec LiabilityModel::simulate_data(Col<int> causal) {
-  int num_variants = causal.size();
-  double q;
   // generate effect size
   vec effectsize = effect_generation(causal);
   vec risk =  genotype_matrix_standarized * effectsize;
@@ -76,7 +106,7 @@ uvec LiabilityModel::simulate_data(Col<int> causal) {
   uvec id_num_controls(num_controls);
 
   boost::math::normal dist(0.0, 1.0);
-  q = quantile(dist, 1-life_time_risk);
+  double q = quantile(dist, 1-life_time_risk);
 
   while (counter_num_controls < num_controls || counter_num_cases < num_cases) {
 
@@ -103,6 +133,13 @@ uvec LiabilityModel::simulate_data(Col<int> causal) {
   return out;
 }
 
+/*! \brief simple standardization function
+ * 
+ * \param variant a vector of binary varinats
+ * \returns a standardized vector of variants
+ *
+ * If the input vector contains only 0 the output vector will as well
+ */
 colvec LiabilityModel::standardize(Col<int> variant) {
   colvec genomean(variant.n_elem);
   genomean.fill(mean(conv_to<Col<double>>::from(variant)));
@@ -117,6 +154,8 @@ colvec LiabilityModel::standardize(Col<int> variant) {
   }
 }
 
+/*! \brief standardization of the whole matrix
+ */
 void LiabilityModel::standardize_matrix()
 {
   genotype_matrix_standarized.set_size(genotype_matrix.n_rows,
