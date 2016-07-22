@@ -22,7 +22,7 @@ public:
   arma::vec power; /*!< output vector containing the stat. power of a simulation*/
   arma::Mat<int> saveSim; /*! matrix which holds all simulations */
 
-  int fixed_causal_var; /*!< fixed number of causal variants */
+  int fixed_causal_var = 0; /*!< fixed number of causal variants */
   double current_percentage; /*!< current percentage of the gene coverd by causal mutations*/
   double max_percentage; /*!< max percentage of the gene to cover in causal mutations */
   double min_percentage; /*!< min percentage of the gene to cover in causal mutations */
