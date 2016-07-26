@@ -41,6 +41,19 @@ TEST_F(models_test, ksburden) {
   EXPECT_EQ(1.0, instance.ksburden(test_matrix, phenotype));
 }
 
+TEST_F(models_test, fisher) {
+  arma::vec pvalues = {0.01, 0.05};
+  EXPECT_FLOAT_EQ(0.004300451, instance.fisher(pvalues));
+}
+
+TEST_F(models_test, large_fisher) {
+  arma::mat lpvalues(2,2);
+  lpvalues = {{0.01, 0.05}, {0.02, 0.01}};
+  arma::vec out = instance.large_fisher(lpvalues);
+  EXPECT_FLOAT_EQ(0.004300451, out(0));
+  EXPECT_FLOAT_EQ(0.001903439, out(1));
+}
+
 TEST_F(models_test, cmc) {
   EXPECT_EQ(10, test_matrix.n_rows);
   EXPECT_EQ(2, test_matrix.n_cols);

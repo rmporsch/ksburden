@@ -4,6 +4,7 @@
 #include <string>
 #include <easylogging++.h>
 #include <armadillo>
+#include <math.h>
 #include <models.h>
 #include <algorithm>
 
@@ -27,6 +28,9 @@ void Simulation::select_test(std::string tests_input) {
 		  id_perform_models.push_back(i);
           }
         }
+	if (perform_tests.size()==3) {
+	perform_tests.push_back("cksburden");
+	}
 }
 
 /*! computes power for a number of models
@@ -61,20 +65,24 @@ for (i = 0; i < power_iter; ++i) {
     }
   }
 
-  // calculate power
-  arma::mat::col_iterator a = pvalues_output.begin_col(0);
-  arma::mat::col_iterator b =
-      pvalues_output.end_col((pvalues_output.n_cols - 1));
+  if (id_perform_models.size() >= 2) {
+    pvalues_output.resize(power_iter, (id_perform_models.size() + 1));
+    arma::mat cksburden = pvalues_output.cols(0, 1);
+    pvalues_output.col(id_perform_models.size()) =
+        large_fisher(cksburden);
+  }
 
-  power.set_size(id_perform_models.size());
-  for(int t_test = 0; t_test < id_perform_models.size(); ++t_test){
+
+  power.set_size(pvalues_output.n_cols);
+  for(int t_test = 0; t_test < pvalues_output.n_cols; ++t_test){
     arma::uvec temp = arma::find(pvalues_output.col(t_test) <= 0.05);
     power(t_test) = temp.size() / (double)power_iter;
     VLOG(9) << "Power for test " << (t_test + 1) << " is " << power(t_test);
   }
 }
 
-/*! define number of causal varinats
+
+/*! \brief define number of causal varinats
  *
  * This is a helper function which can take the current and desired 
  * percentage of a gene covered by causal mutations and defines the raw count of
@@ -90,12 +98,15 @@ bool Simulation::num_causal_var() {
     int temp_size_cluster =
         std::floor((num_variants * current_percentage) + 0.0001);
 
+    VLOG(9) << "cluster size is now " << size_cluster;
+    VLOG(9) << "computing new cluster size";
     while (temp_size_cluster <= size_cluster) {
       current_percentage += steps_percentage;
       temp_size_cluster =
           std::floor((num_variants * current_percentage) + 0.0001);
     }
     size_cluster = temp_size_cluster;
+    VLOG(9) << "cluster size is now " << size_cluster;
 
     if (size_cluster >= num_variants) {
       return false;
@@ -105,7 +116,7 @@ bool Simulation::num_causal_var() {
   }
 }
 
-/*! writes the header of the outputfile
+/*! \brief writes the header of the outputfile
  *
  * \param pFile a stream
  */
@@ -128,11 +139,15 @@ void Simulation::writehead(FILE *pFile) {
       fprintf(pFile, output_file_header.c_str(), perform_tests[0].c_str(),
               perform_tests[1].c_str(), perform_tests[2].c_str(), "percentage",
               "num_car", "effect_size", "simID");
+    case 4:
+      fprintf(pFile, output_file_header.c_str(), perform_tests[0].c_str(),
+              perform_tests[1].c_str(), perform_tests[2].c_str(), perform_tests[3].c_str(), "percentage",
+              "num_car", "effect_size", "simID");
       break;
     }
 }
 
-/*! writes the output file
+/*! \brief writes the output file
  *
  * \param pFile a stream
  * \param ... additional things to print into the outputfile

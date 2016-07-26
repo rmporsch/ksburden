@@ -57,6 +57,19 @@ public:
   };
   Simulation() : LiabilityModel(){};
 
+  Simulation(int input_num_cases, int input_num_controls)
+      : LiabilityModel() {
+    num_cases = input_num_cases;
+    num_controls = input_num_controls;
+    num_subjects = num_cases + num_controls;
+    phenotype.set_size(input_num_cases + input_num_controls);
+    phenotype.ones();
+
+    arma::Col<int> case_vec(num_cases);
+    case_vec.zeros();
+    case_vec = case_vec - 1;
+    phenotype.subvec(num_controls, (num_subjects - 1)) = case_vec;
+  }
   void select_test(std::string tests_input);
   void power_calculation(int power_iter, arma::Col<int> causal_variants);
   bool num_causal_var();

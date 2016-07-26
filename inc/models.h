@@ -34,6 +34,9 @@ public:
   double permutation(model_members model, int iteration,
                      const arma::Mat<int> &genotypes, arma::Col<int> phenotype,
                      int max_iteration);
+  double fisher(arma::vec pvalues);
+
+  arma::vec large_fisher(arma::mat & pvalues);
 
   model_members model_array[3] = {NULL}; /*!< array of pointers to each model function */
   /*! Model Constructir

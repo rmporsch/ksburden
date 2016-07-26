@@ -9,6 +9,7 @@ DEFINE_string(genotypes, "/path/to/genotypes",
 DEFINE_string(variant, "/path/to/varinants", 
 		"This is either a variant file containing the position of each variant in the first column and the genes in the second. Otherwise this is a standardized genotype matrix");
 DEFINE_string(gene, "somegene", "gene name");
+DEFINE_string(simmat, "simmat", "file path to the simulated matrix");
 DEFINE_string(tests, "tests", "a string of tests seperated by comma");
 
 //optional

@@ -7,6 +7,7 @@ DECLARE_string(genotypes);
 DECLARE_string(variant);
 DECLARE_string(gene);
 DECLARE_string(tests);
+DECLARE_string(simmat);
 
 
 DECLARE_int32(threads);

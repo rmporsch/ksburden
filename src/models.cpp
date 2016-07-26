@@ -1,4 +1,5 @@
 #include <models.h>
+#include <boost/math/distributions/chi_squared.hpp>
 
 using namespace arma;
 
@@ -107,3 +108,39 @@ double models::permutation(model_members model, int iteration,
   return p_value;
 }
 
+/*! \brief Fisher's p-value combination
+ *
+ * This is a function which compues Fisher's p-value combination
+ * on the assumption the tests are independent.
+ *
+ * \param pvalues a vector of p-values
+ * \returns a combined p-value
+ */
+double models::fisher(arma::vec pvalues)
+{
+  arma::vec container(pvalues.size(), arma::fill::zeros);
+  int i;
+  for (i = 0; i < pvalues.size(); ++i) {
+    container(i) = log(pvalues(i));
+  }
+  double chi = -2 * arma::sum(container);
+  boost::math::chi_squared_distribution<double> chi_dist(2 * pvalues.size());
+  double p = 1 - boost::math::cdf(chi_dist, chi);
+  return p;
+}
+
+/*! \brief computes fisher's method on a matrix of pvalues
+ *
+ * \param a aramdillo matrix with pvalues
+ * \return a vector of pvalues
+ */
+arma::vec models::large_fisher(arma::mat & pvalues)
+{
+  arma::vec coutput;
+  coutput.set_size(pvalues.n_rows);
+  int i;
+  for (i = 0; i < pvalues.n_rows; ++i) {
+	  coutput.at(i) = fisher(pvalues.row(i).t());
+  }
+  return coutput;
+}
