@@ -35,8 +35,10 @@ class LoadVCF {
 		 * \param variant_file a string with the varaint file path
 		 * */
                 LoadVCF(string vcf_file, string variant_file) {
+                  VLOG(9) << "loading variant file";
                   gene_loc = variant_location(variant_file);
                   genes = get_all_genes(gene_loc);
+                  VLOG(9) << "loading vcf file";
                   reader.open(vcf_file.c_str(), header);
                   reader.readVcfIndex();
                 };

@@ -19,7 +19,10 @@ public:
   arma::Col<int> phenotype; /*!< imported phenotype from the ped file */
   std::vector <std::string> exclude; /*!< subject names to exclude */
   std::vector<std::vector<std::string>> ped; /*!< contant of the pedigree file*/
-  int num_subjects = ped.size(); /*!< number of subjects based on ped file */
+  std::string ped_file;
+  std::string vcfFile;
+  std::string variant_file;
+  int num_subjects; /*!< number of subjects based on ped file */
   std::vector<std::string> name_subjects; /*!< name of subjects from ped file */
 
   void pedigree(std::string ped_file, char sep, std::vector<std::string> vcfID);
@@ -32,9 +35,11 @@ public:
    * \param variant_file path to the variant file
    */
   analysis(std::string ped_file, std::string vcfFile, std::string variant_file)
-      : LoadVCF(vcf_file, variant_file) {
+      : LoadVCF(vcfFile, variant_file) {
+    VLOG(9) << "load subjects";
     name_subjects = sampleNames(header);
     pedigree(ped_file, '\t', name_subjects);
+    num_subjects = ped.size();
   };
   /*! \brief Simple constructor of analysis
    */
