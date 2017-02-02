@@ -107,8 +107,8 @@ int LoadPlink::countlines(const char* fileName) {
 }
 
 arma::mat genotypeMatrix(const std::string fileName, int N, int P,
-                         arma::Col<int> col_skip,
-                         arma::Col<int> row_skip) {
+    arma::Col<int> col_skip,
+    arma::Col<int> row_skip) {
 
   std::ifstream bedFile;
   bool snpMajor = openPlinkBinaryFile(fileName, bedFile);
@@ -127,14 +127,14 @@ arma::mat genotypeMatrix(const std::string fileName, int N, int P,
   int n = arma::accu(row_skip);
   const bool selectrow = (n != N);
 
-  int j, jj, iii;
+  int j, jj;
 
   arma::mat genotypes = arma::mat(n, num_snps, arma::fill::zeros);
   std::bitset<8> b; // Initiate the bit array
   char ch[Nbytes];
 
-i=0;
-int curr_snp = 0;
+  i=0;
+  int curr_snp = 0;
   while (i < P && i < num_snps) {
     if (col_skip[i] == 1) {
       bedFile.seekg(i * Nbytes, bedFile.cur);
@@ -152,7 +152,7 @@ int curr_snp = 0;
             int first = b[c++];
             int second = b[c++];
             if (first == 0) {
-              genotypes(j, iii) = (2 - second);
+              genotypes(j,curr_snp) = (2 - second);
             } // since genotypeMatrix is filled with 1
             if (first == 1 && second == 0) {
               genotypes(j, curr_snp) = 0;
@@ -168,3 +168,35 @@ int curr_snp = 0;
   return genotypes;
 }
 
+/*! \brief generates vector of variants to include 
+ *
+ * This functions takes the gene location with rsids and
+ * looks those up in the bed file. It then returns a vector of
+ * size p (size of all snps) with 1 for variant to include
+ * and 0 for variant not to include
+ *
+ * \param gene_loc the gene location vector
+ *
+ * \return Col<int> with 1 and 0
+ */
+Col<int> LoadPlink::get_col_skip(vector<vector<string>> gene_loc)
+{
+  // bim file
+  arma::Col<int> col_skip(bim_file.size(), arma::fill::zeros);
+
+  int i = 0;
+  for (auto g = gene_loc.begin(); g != gene_loc.end(); g++ ) {
+    while (i < P) {
+      if(find(bim_file[i].begin(), bim_file[i].end(), g->at(0)) !=bim_file[i].end() )
+      {
+        col_skip(i) = 1;
+        break;
+      }
+      i++;
+    }
+  }
+  if(arma::accu(col_skip) == 0)
+    throw std::runtime_error("Gene or positions not in file");
+
+  return col_skip;
+}
