@@ -106,7 +106,7 @@ int LoadPlink::countlines(const char* fileName) {
   return number_of_lines;
 }
 
-arma::mat genotypeMatrix(const std::string fileName, int N, int P,
+arma::mat LoadPlink::get_genotype_matrix(const std::string fileName,
     arma::Col<int> col_skip,
     arma::Col<int> row_skip) {
 
@@ -179,7 +179,7 @@ arma::mat genotypeMatrix(const std::string fileName, int N, int P,
  *
  * \return Col<int> with 1 and 0
  */
-Col<int> LoadPlink::get_col_skip(vector<vector<string>> gene_loc)
+arma::Col<int> LoadPlink::get_col_skip(vector<vector<string>> gene_loc)
 {
   // bim file
   arma::Col<int> col_skip(bim_file.size(), arma::fill::zeros);
@@ -200,3 +200,4 @@ Col<int> LoadPlink::get_col_skip(vector<vector<string>> gene_loc)
 
   return col_skip;
 }
+

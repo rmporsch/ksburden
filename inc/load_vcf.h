@@ -7,6 +7,7 @@
 #include <vector>
 #include <VcfFileReader.h>
 #include <easylogging++.h>
+#include <load_variantFile.h>
 
 using namespace std;
 
@@ -17,45 +18,34 @@ using namespace std;
  * with chromosom,location, and gene name as columns. No headers are
  * allowed.
  */
-class LoadVCF {
+class LoadVCF: virtual public VariantFile {
 	public:
 		int num_variants; /*!< number of variants in gene*/
 		arma::Mat<int> genotype_matrix; /*!< genotype matrix */
-		arma::mat genotype_matrix_standarized; /*!< standardized genotype matrix */
-                string vcf_file; /*!< path of vcf file */
-                string variant_file; /*!< path of variant file */
-                VcfFileReader reader; /*!< reader of vcf file*/
-                VcfHeader header; /*!< header of vcf file */
-                std::random_device rd; /*!< random device */
-                vector<string> genes; /*!< vector of genes in variant file*/
-                vector<vector<string>> gene_loc; /*!< database of variants in gene*/
+    arma::mat genotype_matrix_standarized; /*!< standardized genotype matrix */
+    string vcf_file; /*!< path of vcf file */
+    string variant_file; /*!< path of variant file */
+    random_device rd; /*!< random device */
+    VcfFileReader reader; /*!< reader of vcf file*/
+    VcfHeader header; /*!< header of vcf file */
 
-		/*! The LoadVCF constructor
-		 * \param vcf_file a string with the vcf file path
-		 * \param variant_file a string with the varaint file path
-		 * */
-                LoadVCF(string vcf_file, string variant_file) {
-                  VLOG(9) << "loading variant file";
-                  gene_loc = variant_location(variant_file);
-                  genes = get_all_genes(gene_loc);
-                  VLOG(9) << "loading vcf file";
-                  reader.open(vcf_file.c_str(), header);
-                  reader.readVcfIndex();
-                };
-		/*! A simple LoadVCF construct
-		*/
-		LoadVCF(){};
+    /*! The LoadVCF constructor
+     * \param vcf_file a string with the vcf file path
+     * \param variant_file a string with the varaint file path
+     * */
+    LoadVCF(string vcf_file, string variant_file): VariantFile(variant_file) {
+      VLOG(9) << "loading vcf file";
+      reader.open(vcf_file.c_str(), header);
+      reader.readVcfIndex();
+    };
+    /*! A simple LoadVCF construct
+    */
+    LoadVCF(): VariantFile() {};
 
-                vector<vector<string>>
-                variant_location(string VarFile, char sep = '\t');
-                vector<string>
-                get_all_genes(vector<vector<string>> &data);
-                vector<vector<string>> get_gene_loc(string gene);
-
-                int get_gene_matrix(vector<vector<string>> geneLoc);
-		void load_gene(string gene_name);
-                int generate_genotype_matrix(int subjects, int variants);
-		arma::Col<int> bernulli(double p, int n);
+    int get_gene_matrix(vector<vector<string>> geneLoc);
+    void load_gene(string gene_name);
+    int generate_genotype_matrix(int subjects, int variants);
+    arma::Col<int> bernulli(double p, int n);
 };
 
 #endif

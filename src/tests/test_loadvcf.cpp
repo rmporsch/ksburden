@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <load_vcf.h>
 
-
 class test_loadvcf : public testing::Test
 {
 protected:
@@ -19,14 +18,14 @@ protected:
 
 TEST_F(test_loadvcf, variant_location) {
   std::vector<std::vector<std::string>> variant_loc;
-  variant_loc = instance.variant_location(variant_file);
+  variant_loc = instance.variant_location(variant_file, '\t');
   int size_variant_loc = variant_loc.size();
   EXPECT_EQ(3, size_variant_loc);
 }
 
 TEST_F(test_loadvcf, num_genes) {
   std::vector<std::vector<std::string>> variant_loc;
-  variant_loc = instance.variant_location(variant_file);
+  variant_loc = instance.variant_location(variant_file, '\t');
   std::vector<std::string> genes;
   genes = instance.get_all_genes(variant_loc);
   int num_genes = genes.size();

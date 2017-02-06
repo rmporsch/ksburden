@@ -5,6 +5,7 @@
 #include "./test_liabilitymodel.cpp"
 #include "./test_analysis.cpp"
 #include "./test_simulation.cpp"
+#include "./test_loadPlink.cpp"
 
 INITIALIZE_EASYLOGGINGPP
 

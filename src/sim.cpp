@@ -20,10 +20,14 @@ int main(int argc, char *argv[]) {
     sim = new Simulation(vcf_file, variant_file, FLAGS_numcases, FLAGS_numcontrols);
     auto gene_loc = sim->get_gene_loc(FLAGS_gene);
     sim->get_gene_matrix(gene_loc);
-  } else {
+  } else if(FLAGS_simmat == "plink") {
     sim = new Simulation(FLAGS_numcases, FLAGS_numcontrols);
     sim->genotype_matrix.load(simmat);
     sim->num_variants = sim->genotype_matrix.n_cols;
+  } else if (FLAGS_simmat == "vcf") {
+    sim = new Simulation(vcf_file, variant_file, FLAGS_numcases, FLAGS_numcontrols);
+    auto gene_loc = sim->get_gene_loc(FLAGS_gene);
+    sim->get_gene_matrix(gene_loc);
   }
 
   std::cout <<  sim->genotype_matrix.n_cols<< std::endl;
