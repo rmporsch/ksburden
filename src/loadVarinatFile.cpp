@@ -14,16 +14,16 @@ using namespace std;
  * \param data the result from variantLocation()
  * \returns a vector of gene names
  */
-vector <string> VariantFile::get_all_genes(vector <vector <string> >& data)
+vector <string> VariantFile::get_all_genes(vector <vector <string> >& data, int r)
 {
 	vector <string> genes;
 	for(auto row = data.begin(); row!=data.end(); ++row) 
 	{
-		if(find(genes.begin(), genes.end(), row->at(2)) !=genes.end() )
+		if(find(genes.begin(), genes.end(), row->at(r)) !=genes.end() )
 		{
 			continue;
 		} else {
-			genes.push_back(row->at(2));
+			genes.push_back(row->at(r));
 		}
 	}
 	return genes;
@@ -83,4 +83,3 @@ vector <vector <string> >VariantFile::get_gene_loc(string gene)
 	if(positionGene.size() == 0) throw std::runtime_error("Gene not in file");
 	return positionGene;
 }
-
