@@ -29,8 +29,8 @@ class LoadPlink: virtual public VariantFile {
 
       bim_file = variant_location(bim, '\t');
       fam_file = variant_location(fam, '\t');
-      int P = bim_file.size();
-      int N = fam_file.size();
+      P = bim_file.size();
+      N = fam_file.size();
     };
     /*! A simple LoadPlink construct
     */

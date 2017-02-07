@@ -137,7 +137,7 @@ arma::mat LoadPlink::get_genotype_matrix(const std::string fileName,
   int curr_snp = 0;
   while (i < P && i < num_snps) {
     if (col_skip[i] == 1) {
-      bedFile.seekg(i * Nbytes, bedFile.cur);
+      bedFile.seekg(i * Nbytes, bedFile.beg);
       bedFile.read(ch, Nbytes); // Read the information
       if (!bedFile)
         throw std::runtime_error(
@@ -200,4 +200,3 @@ arma::Col<int> LoadPlink::get_col_skip(vector<vector<string>> gene_loc)
 
   return col_skip;
 }
-
