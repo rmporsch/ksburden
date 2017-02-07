@@ -106,7 +106,7 @@ int LoadPlink::countlines(const char* fileName) {
   return number_of_lines;
 }
 
-arma::mat LoadPlink::get_genotype_matrix(const std::string fileName,
+int LoadPlink::get_genotype_matrix(const std::string fileName,
     arma::Col<int> col_skip,
     arma::Col<int> row_skip) {
 
@@ -129,7 +129,7 @@ arma::mat LoadPlink::get_genotype_matrix(const std::string fileName,
 
   int j, jj;
 
-  arma::mat genotypes = arma::mat(n, num_snps, arma::fill::zeros);
+  genotype_matrix.set_size(n, num_snps);
   std::bitset<8> b; // Initiate the bit array
   char ch[Nbytes];
 
@@ -152,10 +152,10 @@ arma::mat LoadPlink::get_genotype_matrix(const std::string fileName,
             int first = b[c++];
             int second = b[c++];
             if (first == 0) {
-              genotypes(j,curr_snp) = (2 - second);
+              genotype_matrix(j,curr_snp) = (2 - second);
             } // since genotypeMatrix is filled with 1
             if (first == 1 && second == 0) {
-              genotypes(j, curr_snp) = 0;
+             genotype_matrix(j, curr_snp) = 0;
             } // in case of missing values
           }
           j++;
@@ -165,7 +165,7 @@ arma::mat LoadPlink::get_genotype_matrix(const std::string fileName,
     }
     i++;
   }
-  return genotypes;
+  return 0;
 }
 
 /*! \brief generates vector of variants to include 

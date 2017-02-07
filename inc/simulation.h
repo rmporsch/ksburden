@@ -61,7 +61,7 @@ public:
        std::string variant_file,
        int input_num_cases,
        int input_num_controls)
-      : LiabilityModel(vcf_file, variant_file) {
+      : LiabilityModel(fam_file, bim_file, bam_file, variant_file) {
 
     num_cases = input_num_cases;
     num_controls = input_num_controls;

@@ -22,7 +22,7 @@ class LoadPlink: virtual public VariantFile {
     vector<vector<string>> bim_file; /*!< bim file content*/
     vector<vector<string>> fam_file; /*!< bim file content*/
 
-    LoadPlink( std::string fam,
+    LoadPlink(std::string fam,
         std::string bim,
         std::string bam,
         std::string variant_file): VariantFile(variant_file) {
@@ -40,7 +40,7 @@ class LoadPlink: virtual public VariantFile {
 
     arma::Col<int> get_col_skip(vector<vector<string>> gene_loc);
 
-    arma::mat get_genotype_matrix(const std::string fileName,
+    int get_genotype_matrix(const std::string fileName,
         arma::Col<int> col_skip,
         arma::Col<int> row_skip);
 

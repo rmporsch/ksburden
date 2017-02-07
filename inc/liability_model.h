@@ -22,6 +22,7 @@ private:
 	
 
 public:
+  arma::mat genotype_matrix_standarized; /*!< standardized genotype matrix */
 	int num_cluster = 1; /*!< number of clusters */
 	int size_cluster = 1; /*!< size of eachj cluster*/
 	double causal_probability = 1.0; /*!< mutation probability in cluster */

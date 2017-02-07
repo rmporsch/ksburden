@@ -22,7 +22,6 @@ class LoadVCF: virtual public VariantFile {
 	public:
 		int num_variants; /*!< number of variants in gene*/
 		arma::Mat<int> genotype_matrix; /*!< genotype matrix */
-    arma::mat genotype_matrix_standarized; /*!< standardized genotype matrix */
     string vcf_file; /*!< path of vcf file */
     string variant_file; /*!< path of variant file */
     random_device rd; /*!< random device */

@@ -69,9 +69,9 @@ TEST_F(test_loadplink, get_genotype_matrix) {
   current_gene_loc = gene_loc.get_gene_loc(gene_name); 
   arma::Col<int> variants_select = gene_loc.get_col_skip(current_gene_loc);
   arma::Col<int> row_skip(gene_loc.N, arma::fill::ones);
-  arma::mat genotypeMatrix = gene_loc.get_genotype_matrix(bedfile, variants_select, 
+  gene_loc.get_genotype_matrix(bedfile, variants_select, 
       row_skip);
-  EXPECT_EQ(9, genotypeMatrix.n_cols);
-  EXPECT_EQ(gene_loc.N, genotypeMatrix.n_rows);
-  std::cout << arma::accu(genotypeMatrix) << std::endl;
+  EXPECT_EQ(9, gene_loc.genotype_matrix.n_cols);
+  EXPECT_EQ(gene_loc.N, gene_loc.genotype_matrix.n_rows);
+  std::cout << arma::accu(gene_loc.genotype_matrix) << std::endl;
 }

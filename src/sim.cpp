@@ -14,16 +14,26 @@ int main(int argc, char *argv[]) {
   std::string vcf_file = FLAGS_genotypes;
   std::string variant_file = FLAGS_variant;
   std::string simmat = FLAGS_simmat;
+  std::cout << FLAGS_genotypes << std::endl;
+  std::cout << FLAGS_genotypes.length() << std::endl;
 
   Simulation* sim = NULL;
   if (FLAGS_simmat == "simmat") {
-    sim = new Simulation(vcf_file, variant_file, FLAGS_numcases, FLAGS_numcontrols);
+    sim = new Simulation(FLAGS_numcases, FLAGS_numcontrols);
     auto gene_loc = sim->get_gene_loc(FLAGS_gene);
     sim->get_gene_matrix(gene_loc);
   } else if(FLAGS_simmat == "plink") {
-    sim = new Simulation(FLAGS_numcases, FLAGS_numcontrols);
-    sim->genotype_matrix.load(simmat);
-    sim->num_variants = sim->genotype_matrix.n_cols;
+    std::string bed = vcf_file+".bed";
+    std::string bim = vcf_file+".bim";
+    std::string fam = vcf_file+".fam";
+    LOG(INFO) << "using a plink file";
+    std::cout << bed << '\n' << bim << '\n' << fam << std::endl;
+    sim = new Simulation(fam, bim, bed, variant_file,
+        FLAGS_numcases, FLAGS_numcontrols);
+    auto gene_loc = sim->get_gene_loc(FLAGS_gene);
+    arma::Col<int> variants_select = sim->get_col_skip(gene_loc);
+    arma::Col<int> row_select(sim->N, arma::fill::ones);
+    sim->get_genotype_matrix(bed, variants_select, row_select);
   } else if (FLAGS_simmat == "vcf") {
     sim = new Simulation(vcf_file, variant_file, FLAGS_numcases, FLAGS_numcontrols);
     auto gene_loc = sim->get_gene_loc(FLAGS_gene);
