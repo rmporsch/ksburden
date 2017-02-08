@@ -124,6 +124,10 @@ include_directories(${ARMADILLO_INCLUDE_DIR})
 #=============================
 # Library
 #=============================
+# loadVariantFile
+add_library(variantFile SHARED "src/loadVarinatFile.cpp") 
+add_dependencies(variantFile easylogging) 
+target_compile_features(variantFile PRIVATE cxx_range_for)
 # models
 add_library(models SHARED "src/models.cpp") 
 add_dependencies(models ArmadilloDownload easylogging) 
@@ -131,13 +135,18 @@ target_compile_features(models PRIVATE cxx_range_for)
 
 # load_vcf
 add_library(loadvcf SHARED "src/load_vcf.cpp")
-add_dependencies(loadvcf ArmadilloDownload libStatGen easylogging)
+add_dependencies(loadvcf ArmadilloDownload libStatGen easylogging variantFile)
 target_link_libraries(loadvcf libStatGenLib)
 target_compile_features(loadvcf PRIVATE cxx_range_for)
 
+# load_plink
+add_library(loadplink SHARED "src/load_plink.cpp")
+add_dependencies(loadplink ArmadilloDownload libStatGen easylogging variantFile)
+target_compile_features(loadplink PRIVATE cxx_range_for)
+
 # liability_model
 add_library(liabilitymodel SHARED "src/liability_model.cpp")
-add_dependencies(liabilitymodel ArmadilloDownload loadvcf)
+add_dependencies(liabilitymodel ArmadilloDownload loadvcf loadplink)
 target_link_libraries(liabilitymodel loadvcf)
 target_compile_features(liabilitymodel PRIVATE cxx_range_for)
 
@@ -152,8 +161,6 @@ add_library(analysis SHARED "src/data_analysis.cpp")
 add_dependencies(analysis ArmadilloDownload loadvcf)
 target_link_libraries(analysis loadvcf)
 target_compile_features(analysis PRIVATE cxx_range_for)
-
-
 
 
 # sim_flags
@@ -183,6 +190,8 @@ target_link_libraries(sim
 	models
 	liabilitymodel
 	loadvcf
+  loadplink
+  variantFile
 	${ARMADILLO_LIBRARIES}
 	z
 	sim_flags
@@ -196,6 +205,7 @@ target_link_libraries(ksburden
 	models
 	analysis
 	loadvcf
+  variantFile
 	${ARMADILLO_LIBRARIES}
 	z
 	ksburden_flags
@@ -230,6 +240,8 @@ target_link_libraries(tests
 	analysis
 	liabilitymodel
 	loadvcf
+  loadplink
+  variantFile
 	${ARMADILLO_LIBRARIES}
 	z
 	${gtest}

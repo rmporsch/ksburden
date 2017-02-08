@@ -17,17 +17,38 @@ int main(int argc, char *argv[]) {
 
   Simulation* sim = NULL;
   if (FLAGS_simmat == "simmat") {
+    sim = new Simulation(FLAGS_numcases, FLAGS_numcontrols);
+    auto gene_loc = sim->get_gene_loc(FLAGS_gene);
+    sim->get_gene_matrix(gene_loc);
+  } else if(FLAGS_simmat == "plink") {
+
+    std::string bed = vcf_file+".bed";
+    std::string bim = vcf_file+".bim";
+    std::string fam = vcf_file+".fam";
+    LOG(INFO) << "using a plink file";
+
+    LOG(INFO) << "Input files are:\n"
+      << bed << '\n'
+      << bim << '\n'
+      << fam << std::endl;
+
+    sim = new Simulation(fam, bim, bed, variant_file,
+        FLAGS_numcases, FLAGS_numcontrols);
+    auto gene_loc = sim->get_gene_loc(FLAGS_gene);
+    arma::Col<int> variants_select = sim->get_col_skip(gene_loc);
+    arma::Col<int> row_select(sim->N, arma::fill::ones);
+    sim->get_genotype_matrix(bed, variants_select, row_select);
+
+  } else if (FLAGS_simmat == "vcf") {
     sim = new Simulation(vcf_file, variant_file, FLAGS_numcases, FLAGS_numcontrols);
     auto gene_loc = sim->get_gene_loc(FLAGS_gene);
     sim->get_gene_matrix(gene_loc);
-  } else {
-    sim = new Simulation(FLAGS_numcases, FLAGS_numcontrols);
-    sim->genotype_matrix.load(simmat);
-    sim->num_variants = sim->genotype_matrix.n_cols;
   }
 
-  std::cout <<  sim->genotype_matrix.n_cols<< std::endl;
-  std::cout <<  sim->genotype_matrix.n_rows<< std::endl;
+  if (sim->genotype_matrix.n_cols < 1) {
+    throw std::runtime_error("genotype matrix has not columns"); }
+  if (sim->genotype_matrix.n_rows < 1) {
+    throw std::runtime_error("genotype matrix has not rows"); }
 
   sim->standardize_matrix();
   sim->max_test_iteration = FLAGS_iter;
@@ -44,7 +65,6 @@ int main(int argc, char *argv[]) {
   sim->threads = fLI::FLAGS_threads;
 
 
-  std::cout << "do i get here (select tests?" << std::endl;
   sim->select_test(FLAGS_tests);
   std::string power_output = FLAGS_path + "power_" + FLAGS_out;
   FILE *pFile = std::fopen(power_output.c_str(), "w");

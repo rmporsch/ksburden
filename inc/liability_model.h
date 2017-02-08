@@ -2,6 +2,7 @@
 #define liability_model_H
 
 #include <load_vcf.h>
+#include <load_plink.h>
 #include <armadillo>
 #include <random>
 #include <easylogging++.h>
@@ -15,12 +16,13 @@
  * some helper function included. The main function is simulate_data which does 
  * most of the work.
  */
-class LiabilityModel : public LoadVCF
+class LiabilityModel : public LoadVCF, public LoadPlink
 {
 private:
 	
 
 public:
+  arma::mat genotype_matrix_standarized; /*!< standardized genotype matrix */
 	int num_cluster = 1; /*!< number of clusters */
 	int size_cluster = 1; /*!< size of eachj cluster*/
 	double causal_probability = 1.0; /*!< mutation probability in cluster */
@@ -33,15 +35,20 @@ public:
 
 	arma::vec normal_random(int n, double mean, double stdev);
 	arma::vec uniform_random(int n);
-	arma::Col<int> generate_causal_variants(bool EmptyStart);
-	arma::vec effect_generation(arma::Col<int> causal);
-        arma::uvec simulate_data(arma::Col<int> causal);
-        arma::colvec standardize(arma::Col<int> variant);
-        void standardize_matrix();
+  arma::Col<int> generate_causal_variants(bool EmptyStart);
+  arma::vec effect_generation(arma::Col<int> causal);
+  arma::uvec simulate_data(arma::Col<int> causal);
+  arma::colvec standardize(arma::Col<int> variant);
+  void standardize_matrix();
 
-        LiabilityModel(std::string vcf_file, std::string variant_file)
-		: LoadVCF(vcf_file, variant_file) {};
-	LiabilityModel() : LoadVCF(){};
+  LiabilityModel(std::string vcf_file, std::string variant_file)
+    : LoadVCF(vcf_file, variant_file) {};
+  LiabilityModel(
+       std::string fam,
+       std::string bim,
+       std::string bam, std::string variant_file)
+    : LoadPlink( fam, bim, bam, variant_file) {};
+  LiabilityModel() : LoadVCF(){};
 };
 
 #endif /* LIABILITY_MODEL_H */
