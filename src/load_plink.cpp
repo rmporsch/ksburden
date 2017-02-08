@@ -110,6 +110,7 @@ int LoadPlink::get_genotype_matrix(const std::string fileName,
     arma::Col<int> col_skip,
     arma::Col<int> row_skip) {
 
+  LOG(INFO) << "loading genotype matrix";
   std::ifstream bedFile;
   bool snpMajor = openPlinkBinaryFile(fileName, bedFile);
 
@@ -120,22 +121,25 @@ int LoadPlink::get_genotype_matrix(const std::string fileName,
 
   int i = 0;
   int ii = 0;
-  int num_snps = arma::accu(col_skip);
-  const bool colskip = (num_snps != P);
+  num_variants = arma::accu(col_skip);
+  const bool colskip = (num_variants != P);
 
   int Nbytes = ceil(N / 4.0);
   int n = arma::accu(row_skip);
   const bool selectrow = (n != N);
+  if (n < 1 || N < 1 || P < 1 || num_variants < 1) {
+    throw std::runtime_error("no subjects or variants present"); }
 
   int j, jj;
 
-  genotype_matrix.set_size(n, num_snps);
+  genotype_matrix.set_size(n, num_variants);
+  std::cout << genotype_matrix.n_cols << std::endl;
+  std::cout << genotype_matrix.n_rows << std::endl;
   std::bitset<8> b; // Initiate the bit array
   char ch[Nbytes];
 
-  i=0;
   int curr_snp = 0;
-  while (i < P && i < num_snps) {
+  while (i < P && i < num_variants) {
     if (col_skip[i] == 1) {
       bedFile.seekg(i * Nbytes, bedFile.beg);
       bedFile.read(ch, Nbytes); // Read the information

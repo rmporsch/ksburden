@@ -32,7 +32,6 @@ public:
 	arma::vec liability_dist; /*!< vector of the liabilities of each subject */
 	double wished_effect; /*!< desired effect size */
 	double life_time_risk; /*!< life time risk in percentage */
-  arma::Mat<int> genotype_matrix; /*!< genotype matrix */
 
 	arma::vec normal_random(int n, double mean, double stdev);
 	arma::vec uniform_random(int n);

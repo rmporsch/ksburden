@@ -41,10 +41,9 @@ public:
    */
   Simulation(std::string vcf_file, std::string variant_file,
              int input_num_cases, int input_num_controls)
-      : LiabilityModel(vcf_file, variant_file) {
+      : VariantFile(variant_file), LiabilityModel(vcf_file, variant_file) {
 
-    num_cases = input_num_cases;
-    num_controls = input_num_controls;
+    num_cases = input_num_cases; num_controls = input_num_controls;
     num_subjects = num_cases + num_controls;
     phenotype.set_size(input_num_cases + input_num_controls);
     phenotype.ones();
@@ -61,8 +60,8 @@ public:
        std::string variant_file,
        int input_num_cases,
        int input_num_controls)
-      : LiabilityModel(fam_file, bim_file, bam_file, variant_file) {
-
+      : VariantFile(variant_file),
+      LiabilityModel(fam_file, bim_file, bam_file, variant_file) {
     num_cases = input_num_cases;
     num_controls = input_num_controls;
     num_subjects = num_cases + num_controls;
@@ -77,7 +76,7 @@ public:
    Simulation() : LiabilityModel(){};
 
   Simulation(int input_num_cases, int input_num_controls)
-      : LiabilityModel() {
+      :  LiabilityModel() {
     num_cases = input_num_cases;
     num_controls = input_num_controls;
     num_subjects = num_cases + num_controls;
