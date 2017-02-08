@@ -26,6 +26,8 @@ vector <string> VariantFile::get_all_genes(vector <vector <string> >& data, int 
 			genes.push_back(row->at(r));
 		}
 	}
+  if (genes.size() == 0) {
+    throw std::runtime_error("no genes in variant file detected"); }
 	return genes;
 }
 
@@ -61,6 +63,11 @@ vector <vector <string> >VariantFile::variant_location(std::string VarFile, char
 		cerr <<"Foey!\n";
 	}
 
+  if (data.size() == 0) {
+    throw std::runtime_error("variant file is empty"); }
+  if (data[0].size() < 2) {
+    std::cout << data[0][0] << std::endl;
+    throw std::runtime_error("variant file has only one columne, wrong delimiter?"); }
 	return data;
 }
 

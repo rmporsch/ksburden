@@ -16,7 +16,6 @@ class LoadPlink: virtual public VariantFile {
     int N;
     arma::Mat<int> genotype_matrix; /*!< genotype matrix */
     string plink_file; /*!< path of vcf file */
-    string variant_file; /*!< path of variant file */
     vector<string> genes; /*!< vector of genes in variant file*/
     vector<vector<string>> gene_loc; /*!< database of variants in gene*/
     vector<vector<string>> bim_file; /*!< bim file content*/
@@ -28,7 +27,7 @@ class LoadPlink: virtual public VariantFile {
         std::string variant_file): VariantFile(variant_file) {
 
       bim_file = variant_location(bim, '\t');
-      fam_file = variant_location(fam, '\t');
+      fam_file = variant_location(fam, ' ');
       P = bim_file.size();
       N = fam_file.size();
     };
