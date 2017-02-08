@@ -139,9 +139,9 @@ add_dependencies(loadvcf ArmadilloDownload libStatGen easylogging variantFile)
 target_link_libraries(loadvcf libStatGenLib)
 target_compile_features(loadvcf PRIVATE cxx_range_for)
 
-# load_vcf
+# load_plink
 add_library(loadplink SHARED "src/load_plink.cpp")
-add_dependencies(loadvcf ArmadilloDownload libStatGen easylogging variantFile)
+add_dependencies(loadplink ArmadilloDownload libStatGen easylogging variantFile)
 target_compile_features(loadplink PRIVATE cxx_range_for)
 
 # liability_model
