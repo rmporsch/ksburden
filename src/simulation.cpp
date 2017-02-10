@@ -47,7 +47,7 @@ void Simulation::power_calculation(int power_iter, arma::Col<int> causal_variant
   std::vector<int>::iterator m;
   pvalues_output.set_size(power_iter, id_perform_models.size());
   pvalues_output.ones();
-  omp_set_dynamic(threads);
+  omp_set_num_threads(threads);
   saveSim.set_size(power_iter, num_subjects);
 #pragma omp parallel for private(m)
   for (i = 0; i < power_iter; ++i) {

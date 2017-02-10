@@ -139,7 +139,7 @@ int LoadPlink::get_genotype_matrix(const std::string fileName,
   char ch[Nbytes];
 
   int curr_snp = 0;
-  while (i < P && i < num_variants) {
+  while (i < P && curr_snp < num_variants) {
     if (col_skip[i] == 1) {
       bedFile.seekg(i * Nbytes, bedFile.beg);
       bedFile.read(ch, Nbytes); // Read the information
