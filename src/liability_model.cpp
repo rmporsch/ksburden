@@ -102,6 +102,7 @@ uvec LiabilityModel::simulate_data(Col<int> causal) {
   // generate effect size
   vec effectsize = effect_generation(causal);
   vec risk =  genotype_matrix_standarized * effectsize;
+  risk.save("risk.txt", arma::csv_ascii);
 
   int counter_num_cases = 0;
   int counter_num_controls = 0;

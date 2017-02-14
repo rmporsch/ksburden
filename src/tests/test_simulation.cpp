@@ -86,8 +86,8 @@ TEST_F(test_simulation, power_calculation) {
   sim.power_calculation(100, causal_variants);
 
   EXPECT_EQ(100, sim.pvalues_output.n_rows);
-  EXPECT_EQ(3, sim.pvalues_output.n_cols);
-  EXPECT_EQ(3, sim.power.size());
+  EXPECT_EQ(4, sim.pvalues_output.n_cols);
+  EXPECT_EQ(4, sim.power.size());
   EXPECT_NEAR(0.05, sim.power(0), 0.04);
   EXPECT_NEAR(0.05, sim.power(1), 0.04);
   EXPECT_NEAR(0.05, sim.power(2), 0.04);

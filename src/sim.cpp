@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
     sim = new Simulation(FLAGS_numcases, FLAGS_numcontrols);
     auto gene_loc = sim->get_gene_loc(FLAGS_gene);
     sim->get_gene_matrix(gene_loc);
+
   } else if(FLAGS_simmat == "plink") {
 
     std::string bed = vcf_file+".bed";
@@ -40,9 +41,11 @@ int main(int argc, char *argv[]) {
     sim->get_genotype_matrix(bed, variants_select, row_select);
 
   } else if (FLAGS_simmat == "vcf") {
+
     sim = new Simulation(vcf_file, variant_file, FLAGS_numcases, FLAGS_numcontrols);
     auto gene_loc = sim->get_gene_loc(FLAGS_gene);
     sim->get_gene_matrix(gene_loc);
+
   }
 
   if (sim->genotype_matrix.n_cols < 1) {
@@ -51,6 +54,8 @@ int main(int argc, char *argv[]) {
     throw std::runtime_error("genotype matrix has not rows"); }
 
   sim->standardize_matrix();
+  sim->genotype_matrix_standarized.save("all_var_test_gene_stand.txt", arma::csv_ascii);
+
   sim->max_test_iteration = FLAGS_iter;
   sim->life_time_risk = fLD::FLAGS_lifetimerisk;
   sim->num_controls = FLAGS_numcontrols;
@@ -68,7 +73,6 @@ int main(int argc, char *argv[]) {
   sim->select_test(FLAGS_tests);
   std::string power_output = FLAGS_path + "power_" + FLAGS_out;
   FILE *pFile = std::fopen(power_output.c_str(), "w");
-  std::cout << "do i get here?" << std::endl;
 
   VLOG(9) << "Effect size: "<< sim->wished_effect << " to " << FLAGS_maxEffect;
   VLOG(9) << "Cluster size: " << sim->min_percentage << " to "
@@ -81,6 +85,8 @@ int main(int argc, char *argv[]) {
   VLOG(9) << "runnig with " << sim->threads << " threads";
   VLOG(9) << "Loaded Matrix with " << sim->genotype_matrix.n_cols
           << " variants and " << sim->genotype_matrix.n_rows << " subjects";
+
+  sim->genotype_matrix.save("all_var_test_gene.txt", arma::csv_ascii);
 
   sim->writeoutput(pFile);
 
