@@ -19,7 +19,7 @@ TEST_F(test_loadplink, variant_location) {
   std::vector<std::vector<std::string>> variant_loc;
   variant_loc = instance.variant_location(variant_file, '\t');
   int size_variant_loc = variant_loc.size();
-  EXPECT_EQ(9, size_variant_loc);
+  EXPECT_EQ(14, size_variant_loc);
 }
 
 TEST_F(test_loadplink, num_genes) {
@@ -57,7 +57,7 @@ TEST_F(test_loadplink, getcol_skip) {
   LoadPlink gene_loc(famfile, bimfile, bedfile, variant_file);
   current_gene_loc = gene_loc.get_gene_loc(gene_name); 
   arma::Col<int> variants_select = gene_loc.get_col_skip(current_gene_loc);
-  EXPECT_EQ(9, arma::accu(variants_select));
+  EXPECT_EQ(14, arma::accu(variants_select));
 }
 
 TEST_F(test_loadplink, get_genotype_matrix) {
@@ -71,7 +71,7 @@ TEST_F(test_loadplink, get_genotype_matrix) {
   arma::Col<int> row_skip(gene_loc.N, arma::fill::ones);
   gene_loc.get_genotype_matrix(bedfile, variants_select, 
       row_skip);
-  EXPECT_EQ(9, gene_loc.genotype_matrix.n_cols);
+  EXPECT_EQ(14, gene_loc.genotype_matrix.n_cols);
   EXPECT_EQ(gene_loc.N, gene_loc.genotype_matrix.n_rows);
   std::cout << arma::accu(gene_loc.genotype_matrix) << std::endl;
 }

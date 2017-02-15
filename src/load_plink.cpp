@@ -155,11 +155,11 @@ int LoadPlink::get_genotype_matrix(const std::string fileName,
           if (row_skip[j] == 1) {
             int first = b[c++];
             int second = b[c++];
-            if (first == 0) {
+            if (first == 0 && second != 1) {
               genotype_matrix(j,curr_snp) = (2 - second);
             } // since genotypeMatrix is filled with 1
             if (first == 1 && second == 0) {
-             genotype_matrix(j, curr_snp) = 0;
+             genotype_matrix(j, curr_snp) = 1;
             } // in case of missing values
           }
           j++;

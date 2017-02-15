@@ -56,7 +56,7 @@ void Simulation::power_calculation(int power_iter, arma::Col<int> causal_variant
     arma::Mat<int> temp_genotypes =
       genotype_matrix.rows(simulated_pheno_id);
     saveSim.row(i) = arma::conv_to<arma::Row<int>>::from(simulated_pheno_id);
-    //temp_genotypes.save("saved_sim_genotypes.txt", arma::csv_ascii);
+    temp_genotypes.save("saved_sim_genotypes.txt", arma::csv_ascii);
     // run models
     for (m=id_perform_models.begin(); m<id_perform_models.end(); ++m) {
       pvalues_output(i, *m) =
@@ -101,8 +101,6 @@ bool Simulation::num_causal_var() {
     int temp_size_cluster =
       std::floor((num_variants * current_percentage) + 0.0001);
 
-    VLOG(9) << "cluster size is now " << size_cluster <<
-      "with " << num_variants << " variants";
     VLOG(9) << "computing new cluster size";
     while (temp_size_cluster <= size_cluster) {
       current_percentage += steps_percentage;
