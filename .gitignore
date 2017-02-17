@@ -1,2 +1,10 @@
 *.so
 *.a
+CMakeFiles/*
+lib/*
+include/*
+logs/*
+logs/*
+CMakeCache.txt
+Makefile
+
