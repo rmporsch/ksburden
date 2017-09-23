@@ -52,6 +52,8 @@ int main(int argc, char *argv[]) {
     throw std::runtime_error("genotype matrix has not columns"); }
   if (sim->genotype_matrix.n_rows < 1) {
     throw std::runtime_error("genotype matrix has not rows"); }
+  if (arma::accu(sim->genotype_matrix) < 1) {
+    throw std::runtime_error("genotype matrix has no variants"); }
 
   sim->standardize_matrix();
   sim->max_test_iteration = FLAGS_iter;
