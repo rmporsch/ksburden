@@ -38,12 +38,14 @@ TEST_F(test_liabilitymodel, uniform_random) {
 }
 
 TEST_F(test_liabilitymodel, generate_causal_variants) {
-  liabmodel.num_variants = 10;
-  liabmodel.size_cluster = 1;
+  liabmodel.num_variants = 100;
+  liabmodel.size_cluster = 5;
+  liabmodel.num_cluster = 5;
   arma::Col<int> causal_var = liabmodel.generate_causal_variants(false);
-  EXPECT_EQ(10, causal_var.size());
-  EXPECT_EQ(1, sum(causal_var));
-  EXPECT_EQ(1, causal_var(0));
+  EXPECT_EQ(100, causal_var.size());
+  EXPECT_EQ(25, sum(causal_var));
+  causal_var.print(); 
+  //EXPECT_EQ(1, causal_var(0));
 }
 
 

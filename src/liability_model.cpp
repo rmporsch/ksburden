@@ -4,6 +4,9 @@
 #include <load_vcf.h>
 #include <easylogging++.h>
 #include <boost/math/distributions/normal.hpp>
+#include <stdlib.h>
+#include <stdio.h>
+
 
 using namespace arma;
 
@@ -43,30 +46,40 @@ vec LiabilityModel::uniform_random(int n) {
 Col<int> LiabilityModel::generate_causal_variants(bool EmptyStart) {
 
   Col<int> causal(num_variants, fill::zeros);
-  Col<int> cluster(size_cluster);
+  int sides = size_cluster / 2;
+  int gamp_min = 1;
+  std::uniform_int_distribution<> dis(0+(sides+gamp_min),
+      (num_variants-(1+sides+gamp_min)));
 
-  int start;
-  int emptySpace = num_variants - size_cluster * num_cluster;
-  int sizeEmpty = size_cluster-1;
   Col<int> c_vec(size_cluster, fill::ones);
 
-  if (EmptyStart) {
-    start = sizeEmpty;
-  } else {
-    start = 0;
+  // for each causal cluster
+  for (int i = 0; i != num_cluster; ++i) {
+    int pos;
+    int counter = 0;
+    int ff;
+    do {
+      if (EmptyStart) {
+        // start of the genome
+        pos = (1 + sides); 
+      } else {
+        // choose random position
+        pos = dis(rd);
+      }
+      // check if there is any overlap
+      ff = arma::sum(causal.subvec(pos-(sides+gamp_min), pos+(sides+gamp_min)));
+      std::cout << ff << std::endl;
+      counter += 1;
+    } while (ff > 0 & counter <= 100);
+    // asign causal cluster
+    if (counter <=100) {
+      causal.subvec(pos-(sides), pos+(sides)) = c_vec;
+    } else {
+      printf ("Error: could not find suitable location for causal cluster");
+      exit (EXIT_FAILURE);
+    }
   }
 
-  causal.subvec(start, start + size_cluster - 1) = c_vec;
-
-  //int i = 0;
-  //while (i < num_cluster) {
-  //  //causal.subvec(start, start + size_cluster - 1) =
-  //  //    bernulli(causal_probability, size_cluster);
-
-  //  i++;
-  //  start = start + size_cluster;
-  //  start = start + sizeEmpty;
-  //}
   VLOG(9) << "simulated " << sum(causal) << " causal mutations"
           << " with probability " << causal_probability;
   return causal;

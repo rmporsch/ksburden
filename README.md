@@ -98,7 +98,7 @@ Optional flags:
 | --verbose | verbose level |
 | --iter | number of iterations |
 | --lifetimerisk | life time risk |
-| --tests | models to perform, should a string separated by commas |
+| --tests | models to perform, should be a string separated by commas |
 | --minEffect | minimal effect size |
 | --maxEffect | maximal effect size |
 | --effectSteps | effect size steps |
