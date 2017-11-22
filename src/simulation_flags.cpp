@@ -35,6 +35,10 @@ DEFINE_double(maxPercentage, 1.00, "maximal percentage steps");
 DEFINE_double(probSteps, 0.00, "probability steps in which the program increases");
 DEFINE_double(maxProb, 1.00, "maximal probability");
 
+DEFINE_int32(maxClusterIter, 1, "maximal random iteration of clusters");
+DEFINE_int32(numCluster, 1, "number of clusters");
+DEFINE_int32(sizeCluster, 1, "size of cluster in bp");
+
 DEFINE_double(lifetimerisk, 0.10, "life time risk in percentage");
 DEFINE_int32(causalVar, 0, "Number of causal mutations, currently mutual exclusive with 'precentageSteps'");
 //

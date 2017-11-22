@@ -20,7 +20,7 @@ class VariantFile
     vector <vector <string> > get_gene_loc(string gene);
 
     VariantFile(string variant_file) {
-      LOG(INFO) << "loading variant file";
+      std::cout << "loading variant file" << std::endl;
       gene_loc = variant_location(variant_file, '\t');
       int gene_col = (gene_loc[0].size() -1);
       genes = get_all_genes(gene_loc, gene_col);

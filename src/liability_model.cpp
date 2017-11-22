@@ -47,36 +47,39 @@ Col<int> LiabilityModel::generate_causal_variants(bool EmptyStart) {
 
   Col<int> causal(num_variants, fill::zeros);
   int sides = size_cluster / 2;
+  std::cout << "cluster size: " << size_cluster << std::endl;
   int gamp_min = 1;
+  int pos;
   std::uniform_int_distribution<> dis(0+(sides+gamp_min),
       (num_variants-(1+sides+gamp_min)));
 
-  Col<int> c_vec(size_cluster, fill::ones);
+  Col<int> c_vec(2*sides+1, fill::ones);
+  real_num_causal = 2*sides+1;
 
-  // for each causal cluster
-  for (int i = 0; i != num_cluster; ++i) {
-    int pos;
-    int counter = 0;
-    int ff;
-    do {
-      if (EmptyStart) {
-        // start of the genome
-        pos = (1 + sides); 
-      } else {
+  if (EmptyStart) {
+    pos = 0;
+    causal.subvec(pos, pos+size_cluster) = c_vec;
+  } else {
+    // for each causal cluster
+    for (int i = 0; i != num_cluster; ++i) {
+      int counter = 0;
+      int ff;
+      do {
         // choose random position
         pos = dis(rd);
+        // check if there is any overlap
+        ff = arma::sum(causal.subvec(pos-(sides+gamp_min), pos+(sides+gamp_min)));
+        counter += 1;
+      } while (ff > 0 & counter <= 100);
+      // asign causal cluster
+      if (counter <=100) {
+        causal.subvec(pos-(sides), pos+(sides)) = c_vec;
+        std::cout << "current number of causal mutations" << std::endl;
+        std::cout << arma::sum(causal) << std::endl;
+      } else {
+        printf ("Error: could not find suitable location for causal cluster");
+        exit (EXIT_FAILURE);
       }
-      // check if there is any overlap
-      ff = arma::sum(causal.subvec(pos-(sides+gamp_min), pos+(sides+gamp_min)));
-      std::cout << ff << std::endl;
-      counter += 1;
-    } while (ff > 0 & counter <= 100);
-    // asign causal cluster
-    if (counter <=100) {
-      causal.subvec(pos-(sides), pos+(sides)) = c_vec;
-    } else {
-      printf ("Error: could not find suitable location for causal cluster");
-      exit (EXIT_FAILURE);
     }
   }
 

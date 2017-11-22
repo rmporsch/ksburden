@@ -166,6 +166,7 @@ void Simulation::writeoutput(FILE *pFile, ...) {
     writehead(pFile);
     wrote_head = true;
   } else {
+    std::cout << "writing now" << std::endl;
     va_list argptr;
     va_start(argptr, output_file_body.c_str());
     vfprintf(pFile, output_file_body.c_str(), argptr);

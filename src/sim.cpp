@@ -56,6 +56,7 @@ int main(int argc, char *argv[]) {
     throw std::runtime_error("genotype matrix has no variants"); }
 
   sim->standardize_matrix();
+  sim->fixed_causal_var = FLAGS_sizeCluster;
   sim->max_test_iteration = FLAGS_iter;
   sim->life_time_risk = fLD::FLAGS_lifetimerisk;
   sim->num_controls = FLAGS_numcontrols;

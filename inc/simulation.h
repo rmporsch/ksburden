@@ -15,6 +15,7 @@ class Simulation : public LiabilityModel, public models {
 public:
   int test_iteration = 1000; /*!< number of MC iterations for each model*/
   int max_test_iteration = 100000; /*!< max. number of iteration for each model*/
+  int real_num_causal; /*!< number of real causal mutations used*/
   arma::Col<int> phenotype; /*!< integer vector for phenotype */
   std::vector<int> id_perform_models; /*!< integer vector of models to perform */
   std::vector<std::string> perform_tests;  /*!< vector with the names of models to compute */

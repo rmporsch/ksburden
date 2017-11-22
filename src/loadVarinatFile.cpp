@@ -80,7 +80,7 @@ vector <vector <string> >VariantFile::variant_location(std::string VarFile, char
  */
 vector <vector <string> >VariantFile::get_gene_loc(string gene)
 {
-  std::cout << "gene I look for :" << gene << std::endl;
+  std::cout << "gene I look for: " << gene << std::endl;
   std::cout << "gene_loc: " << gene_loc[0][1] << std::endl;
 	vector <vector <string> > positionGene;
 	for(auto i = gene_loc.begin(); i!=gene_loc.end(); ++i) {
