@@ -97,7 +97,7 @@ bool Simulation::num_causal_var() {
     throw std::runtime_error("no variant present");}
 
 
-  if (fixed_causal_var == 0) {
+  if (fixed_causal_var == 0 & steps_percentage>0) {
     int temp_size_cluster =
       std::floor((num_variants * current_percentage) + 0.0001);
 
@@ -118,6 +118,9 @@ bool Simulation::num_causal_var() {
     } else {
       return true;
     }
+  } else {
+    size_cluster = std::floor((num_variants * current_percentage) + 0.0001);
+    return true;
   }
 }
 
