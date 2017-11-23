@@ -32,6 +32,9 @@ DECLARE_double(maxPercentage);
 DECLARE_int32(causalVar);
 DECLARE_double(probSteps);
 DECLARE_double(maxProb);
+DECLARE_int32(maxClusterIter);
+DECLARE_int32(numCluster);
+DECLARE_int32(sizeCluster);
 void sanity_check(int argc, char* argv[]);
 
 #endif

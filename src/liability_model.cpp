@@ -4,6 +4,9 @@
 #include <load_vcf.h>
 #include <easylogging++.h>
 #include <boost/math/distributions/normal.hpp>
+#include <stdlib.h>
+#include <stdio.h>
+
 
 using namespace arma;
 
@@ -43,30 +46,43 @@ vec LiabilityModel::uniform_random(int n) {
 Col<int> LiabilityModel::generate_causal_variants(bool EmptyStart) {
 
   Col<int> causal(num_variants, fill::zeros);
-  Col<int> cluster(size_cluster);
+  int sides = size_cluster / 2;
+  std::cout << "cluster size: " << size_cluster << std::endl;
+  int gamp_min = 1;
+  int pos;
+  std::uniform_int_distribution<> dis(0+(sides+gamp_min),
+      (num_variants-(1+sides+gamp_min)));
 
-  int start;
-  int emptySpace = num_variants - size_cluster * num_cluster;
-  int sizeEmpty = size_cluster-1;
-  Col<int> c_vec(size_cluster, fill::ones);
+  Col<int> c_vec(2*sides+1, fill::ones);
+  real_num_causal = 2*sides+1;
 
   if (EmptyStart) {
-    start = sizeEmpty;
+    pos = 0;
+    causal.subvec(pos, pos+size_cluster) = c_vec;
   } else {
-    start = 0;
+    // for each causal cluster
+    for (int i = 0; i != num_cluster; ++i) {
+      int counter = 0;
+      int ff;
+      do {
+        // choose random position
+        pos = dis(rd);
+        // check if there is any overlap
+        ff = arma::sum(causal.subvec(pos-(sides+gamp_min), pos+(sides+gamp_min)));
+        counter += 1;
+      } while (ff > 0 & counter <= 100);
+      // asign causal cluster
+      if (counter <=100) {
+        causal.subvec(pos-(sides), pos+(sides)) = c_vec;
+        std::cout << "current number of causal mutations" << std::endl;
+        std::cout << arma::sum(causal) << std::endl;
+      } else {
+        printf ("Error: could not find suitable location for causal cluster");
+        exit (EXIT_FAILURE);
+      }
+    }
   }
 
-  causal.subvec(start, start + size_cluster - 1) = c_vec;
-
-  //int i = 0;
-  //while (i < num_cluster) {
-  //  //causal.subvec(start, start + size_cluster - 1) =
-  //  //    bernulli(causal_probability, size_cluster);
-
-  //  i++;
-  //  start = start + size_cluster;
-  //  start = start + sizeEmpty;
-  //}
   VLOG(9) << "simulated " << sum(causal) << " causal mutations"
           << " with probability " << causal_probability;
   return causal;
@@ -102,7 +118,6 @@ uvec LiabilityModel::simulate_data(Col<int> causal) {
   // generate effect size
   vec effectsize = effect_generation(causal);
   vec risk =  genotype_matrix_standarized * effectsize;
-  risk.save("risk.txt", arma::csv_ascii);
 
   int counter_num_cases = 0;
   int counter_num_controls = 0;

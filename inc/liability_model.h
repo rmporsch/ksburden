@@ -26,6 +26,7 @@ public:
 	int num_cluster = 1; /*!< number of clusters */
 	int size_cluster = 1; /*!< size of eachj cluster*/
 	double causal_probability = 1.0; /*!< mutation probability in cluster */
+  int real_num_causal; /*!< number of real causal mutations used*/
 	int num_cases; /*!< number of cases to simulate */
 	int num_controls; /*!< number of controls to simulate */
 	int num_subjects = num_cases + num_controls; /*!< number of subjects to simulate */

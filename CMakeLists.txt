@@ -199,6 +199,21 @@ target_link_libraries(sim
 	)
 target_compile_features(sim PRIVATE cxx_range_for)
 
+add_executable(sim2 ${CMAKE_SOURCE_DIR}/src/sim_2.cpp)
+target_link_libraries(sim2
+	simulation
+	models
+	liabilitymodel
+	loadvcf
+  loadplink
+  variantFile
+	${ARMADILLO_LIBRARIES}
+	z
+	sim_flags
+	-O2 blas lapack -DEBUG
+	)
+target_compile_features(sim2 PRIVATE cxx_range_for)
+
 # analysis program
 add_executable(ksburden ${CMAKE_SOURCE_DIR}/src/ksburden.cpp)
 target_link_libraries(ksburden
