@@ -29,7 +29,7 @@ double models::ksburden(const Mat<int> &genotypes, const Col<int> &phenotype)
 {
   double test_statistic;
   uvec cases_ID = find(phenotype == 1);
-  uvec control_ID = find(phenotype == -1);
+  uvec control_ID = find(phenotype == 0);
   vec cases = edf(genotypes, cases_ID);
   vec controls = edf(genotypes, control_ID);
 
@@ -61,8 +61,8 @@ double models::cmc(const Mat<int> &genotypes, const Col<int> &phenotype)
 {
   double test_statistic;
 
-  uvec cases_ID = find(phenotype > 0);
-  uvec control_ID = find(phenotype < 0);
+  uvec cases_ID = find(phenotype == 1);
+  uvec control_ID = find(phenotype == 0);
   int number_cases = cases_ID.size();
   int number_controls = control_ID.size();
 
