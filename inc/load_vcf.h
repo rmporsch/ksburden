@@ -30,7 +30,8 @@ class LoadVCF: virtual public VariantFile {
      * \param vcf_file a string with the vcf file path
      * \param variant_file a string with the varaint file path
      * */
-    LoadVCF(string vcf_file, string variant_file): VariantFile(variant_file) {
+    //LoadVCF(string vcf_file, string variant_file): VariantFile(variant_file) {
+    LoadVCF(string vcf_file, string variant_file) {
       VLOG(9) << "loading vcf file";
       reader.open(vcf_file.c_str(), header);
       reader.readVcfIndex();

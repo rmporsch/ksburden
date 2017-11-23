@@ -35,7 +35,7 @@ public:
    * \param variant_file path to the variant file
    */
   analysis(std::string ped_file, std::string vcfFile, std::string variant_file)
-      : LoadVCF(vcfFile, variant_file) {
+      : LoadVCF(vcfFile, variant_file), VariantFile(variant_file) {
     VLOG(9) << "load subjects";
     name_subjects = sampleNames(header);
     pedigree(ped_file, '\t', name_subjects);
