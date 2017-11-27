@@ -56,8 +56,7 @@ int main(int argc, char *argv[]) {
     throw std::runtime_error("genotype matrix has no variants"); }
 
   sim->standardize_matrix();
-//sim->genotype_matrix_standarized.save("all_var_test_gene_stand.txt", arma::csv_ascii);
-
+  sim->fixed_causal_var = FLAGS_sizeCluster;
   sim->max_test_iteration = FLAGS_iter;
   sim->life_time_risk = fLD::FLAGS_lifetimerisk;
   sim->num_controls = FLAGS_numcontrols;
@@ -88,8 +87,7 @@ int main(int argc, char *argv[]) {
   VLOG(9) << "Loaded Matrix with " << sim->genotype_matrix.n_cols
           << " variants and " << sim->genotype_matrix.n_rows << " subjects";
 
-  std::string outputgenotypes = FLAGS_path   + FLAGS_gene + "_geneotypes.csv";
-  sim->genotype_matrix.save(outputgenotypes, arma::csv_ascii);
+  sim->genotype_matrix.save("genotypes_" + FLAGS_gene +".txt", arma::csv_ascii);
 
   sim->writeoutput(pFile);
 

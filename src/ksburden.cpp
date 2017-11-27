@@ -26,7 +26,6 @@ int main(int argc, char *argv[])
   analysis data(ped_file, vcf_file, variant_file);
   models instance;
   int num_models = 3; int m;
-  data.phenotype = data.phenotype - 1;
 
   VLOG(9) << "starting compuation";
   for (auto g = data.genes.begin(); g != data.genes.end(); ++g) {
@@ -41,14 +40,13 @@ int main(int argc, char *argv[])
       output[m] = instance.permutation(
           instance.model_array[m], FLAGS_iter,
           data.genotype_matrix.rows(data.id_genotype_include), data.phenotype,
-          5000);
+          100000);
     }
-    std::cout << output[0] << std::endl;
-    std::cout << output[1] << std::endl;
-    std::cout << output[2] << std::endl;
 
     arma::vec fisher_comb = {output[0], output[1]};
     double p_fisher = instance.fisher(fisher_comb);
+
+
 
     fprintf(fout, "%s\t%f\t%f\t%f\t%f\t%i\n",
 		    g->c_str(),
