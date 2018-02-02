@@ -46,7 +46,7 @@ vec LiabilityModel::uniform_random(int n) {
 Col<int> LiabilityModel::generate_causal_variants(bool EmptyStart) {
 
   Col<int> causal(num_variants, fill::zeros);
-  int sides = size_cluster / 2;
+  int sides = (size_cluster / 2) / num_cluster;
   std::cout << "cluster size: " << size_cluster << std::endl;
   int gamp_min = 1;
   int pos;
