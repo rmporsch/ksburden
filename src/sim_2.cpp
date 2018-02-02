@@ -65,9 +65,9 @@ int main(int argc, char *argv[]) {
   sim->wished_effect = FLAGS_minEffect;
   sim->num_cluster = FLAGS_numCluster;
   sim->min_percentage = 0;
-  sim->current_percentage = FLAGS_maxPercentage;
-  sim->steps_percentage = 0;
-  sim->max_percentage = 0;
+  sim->current_percentage = FLAGS_percentageSteps;
+  sim->steps_percentage = FLAGS_percentageSteps;
+  sim->max_percentage = FLAGS_maxPercentage;
   sim->threads = fLI::FLAGS_threads;
 
 
@@ -96,33 +96,33 @@ int main(int argc, char *argv[]) {
   // cluster size loop
   VLOG(9) << "Finished setting up the simulation and will start computing now";
   bool cover_full_gene = true; int sim_id = 0;
+  while(sim->current_percentage <= sim->max_percentage) {
 
-  float random_cluster_id = 0;
-  while (random_cluster_id <= FLAGS_maxClusterIter) {
     sim->num_causal_var();
     arma::Col<int> causal_variants = sim->generate_causal_variants(false);
     sim->wished_effect = FLAGS_minEffect;
     while (sim->wished_effect <= FLAGS_maxEffect) {
+
       VLOG(1) << "Current Efffect size: " << sim->wished_effect;
       sim->power_calculation(FLAGS_powerIter, causal_variants);
       std::string output = FLAGS_path + std::to_string(sim_id) + FLAGS_out;
       sim->pvalues_output.save(output, arma::csv_ascii);
       std::string output_sim =
-          FLAGS_path + std::to_string(sim_id) + "_sim_" + FLAGS_out;
+        FLAGS_path + std::to_string(sim_id) + "_sim_" + FLAGS_out;
       sim->saveSim.save(output_sim, arma::csv_ascii);
       std::cout << sim_id << std::endl;
 
       VLOG(1) << "writing for effect size: " << sim->wished_effect;
       VLOG(1) << "writing for cluster size: " << sim->fixed_causal_var;
       sim->writeoutput(pFile, sim->power[0], sim->power[1], sim->power[2],
-                      sim->power[3], sim->current_percentage*sim->num_cluster,
-                      sim->real_num_causal*sim->num_cluster,
-                      sim->wished_effect, sim_id);
+          sim->power[3], sim->current_percentage,
+          sim->real_num_causal,
+          sim->wished_effect, sim_id);
       sim->wished_effect += FLAGS_effectSteps;
       sim_id += 1;
       VLOG(9) << sim_id;
     }
-    random_cluster_id +=1.0;
+    sim->current_percentage += sim->steps_percentage;
   }
   std::fclose(pFile);
 
