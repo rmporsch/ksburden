@@ -88,8 +88,6 @@ int main(int argc, char *argv[]) {
           << " variants and " << sim->genotype_matrix.n_rows << " subjects";
   VLOG(9) << "Using  " << sim->current_percentage << " percentage of variants ";
 
-  sim->genotype_matrix.save("sim2_genotypes_" + FLAGS_gene +".txt", arma::csv_ascii);
-
   sim->writeoutput(pFile);
 
 
