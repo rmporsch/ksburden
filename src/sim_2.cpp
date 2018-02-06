@@ -89,6 +89,7 @@ int main(int argc, char *argv[]) {
   VLOG(9) << "Using  " << sim->current_percentage << " percentage of variants ";
 
   sim->writeoutput(pFile);
+  sim->genotype_matrix.save("genotypes_" + FLAGS_gene +".txt", arma::csv_ascii);
 
 
   // cluster size loop

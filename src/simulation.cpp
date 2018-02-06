@@ -56,7 +56,6 @@ void Simulation::power_calculation(int power_iter, arma::Col<int> causal_variant
     arma::Mat<int> temp_genotypes =
       genotype_matrix.rows(simulated_pheno_id);
     saveSim.row(i) = arma::conv_to<arma::Row<int>>::from(simulated_pheno_id);
-    temp_genotypes.save("saved_sim_genotypes.txt", arma::csv_ascii);
     // run models
     for (m=id_perform_models.begin(); m<id_perform_models.end(); ++m) {
       pvalues_output(i, *m) =
