@@ -144,3 +144,24 @@ arma::vec models::large_fisher(arma::mat & pvalues)
   }
   return coutput;
 }
+
+
+/*! \brief kssum-test
+ *
+ * \param genotypes a genotype matrix
+ * \param phenotype the phenotype
+ * \returns the kssum test statistics
+ */
+double models::kssum(const Mat<int> &genotypes, const Col<int> &phenotype)
+{
+  double test_statistic;
+  uvec cases_ID = find(phenotype == 1);
+  uvec control_ID = find(phenotype == -1);
+  vec cases = edf(genotypes, cases_ID);
+  vec controls = edf(genotypes, control_ID);
+
+  vec diff_ksburden = cases - controls;
+  test_statistic = sum(abs(diff_ksburden));
+
+  return test_statistic;
+}

@@ -26,6 +26,9 @@ public:
   double ksburden(const arma::Mat<int> &genotypes,
                   const arma::Col<int> &phenotype);
 
+  double kssum(const arma::Mat<int> &genotypes,
+                  const arma::Col<int> &phenotype);
+
   double burden(const arma::Mat<int> &genotypes,
                 const arma::Col<int> &phenotype);
 
