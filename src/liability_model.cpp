@@ -58,7 +58,7 @@ Col<int> LiabilityModel::generate_causal_variants(bool EmptyStart) {
 
   if (EmptyStart) {
     pos = 0;
-    causal.subvec(pos, pos+size_cluster) = c_vec;
+    causal.ones();
   } else {
     // for each causal cluster
     for (int i = 0; i != num_cluster; ++i) {

@@ -106,7 +106,7 @@ include_directories(BOOST_DIR)
 #============
 ExternalProject_Add(ArmadilloDownload
 	PREFIX ${LIBRARY_OUTPUT_PATH}/armadillo-7.100.3
-	DOWNLOAD_COMMAND wget http://sourceforge.net/projects/arma/files/armadillo-7.100.3.tar.xz
+	DOWNLOAD_COMMAND wget http://sourceforge.net/projects/arma/files/armadillo-8.100.0.tar.xz
 	CONFIGURE_COMMAND tar -xf ../armadillo-7.100.3.tar.xz -C ../ArmadilloDownload  --strip-components=1
 	BUILD_IN_SOURCE 1
 	BUILD_COMMAND cmake .

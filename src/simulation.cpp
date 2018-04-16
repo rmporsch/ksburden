@@ -49,9 +49,13 @@ void Simulation::power_calculation(int power_iter, arma::Col<int> causal_variant
   pvalues_output.ones();
   omp_set_num_threads(threads);
   saveSim.set_size(power_iter, num_subjects);
+  VLOG(9) << "sum of causal variants is " << arma::sum(causal_variants);
+  VLOG(9) << causal_variants;
+
 #pragma omp parallel for private(m)
   for (i = 0; i < power_iter; ++i) {
 
+    VLOG(9) << "simulating iteration " << i;
     arma::uvec simulated_pheno_id = simulate_data(causal_variants);
     arma::Mat<int> temp_genotypes =
       genotype_matrix.rows(simulated_pheno_id);
@@ -101,11 +105,16 @@ bool Simulation::num_causal_var() {
       std::floor((num_variants * current_percentage) + 0.0001);
 
     VLOG(9) << "computing new cluster size";
+    VLOG(9) << "cluster size is set to " << size_cluster;
+    VLOG(9) << "number of variants is " << num_variants;
     while (temp_size_cluster <= size_cluster) {
       current_percentage += steps_percentage;
+      VLOG(9) << "percentage is now (temp) " << current_percentage;
       temp_size_cluster =
         std::floor((num_variants * current_percentage) + 0.0001);
+      VLOG(9) << "temp cluster size is " << temp_size_cluster;
       if (current_percentage > 1) {
+        VLOG(9) << "Current percentage is too large with " << current_percentage;
         throw std::runtime_error("percentage is higher than 1");
       }
     }

@@ -13,6 +13,7 @@ using namespace std;
 using namespace arma;
 
 
+
 /*! \brief getGene
  *
  * extracts the genotype matrix of a given gene
@@ -72,6 +73,7 @@ int LoadVCF::get_gene_matrix(vector<vector<string>> geneLoc) {
     LOG(WARNING) << "ignored " << invalidGenotypeCount
       << " genotypes due to invalid coding";
   }
+  std::cout << "sum of all genotypes of current matrix: " << accu(genotype_matrix) << std::endl;
 
   return 0;
 }

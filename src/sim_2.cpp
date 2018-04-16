@@ -97,12 +97,22 @@ int main(int argc, char *argv[]) {
   bool cover_full_gene = true; int sim_id = 0;
   while(sim->current_percentage <= sim->max_percentage) {
 
+    VLOG(1) << "Current Cluster size: " << sim->current_percentage;
     sim->num_causal_var();
-    arma::Col<int> causal_variants = sim->generate_causal_variants(false);
+    arma::Col<int> causal_variants(sim->num_variants, arma::fill::zeros);
+    VLOG(1) << "Double check percentage as: " << sim->current_percentage;
+    if (sim->current_percentage >= 0.99) {
+      VLOG(9) << "setting causal variants to max";
+      causal_variants = sim->generate_causal_variants(true);
+    } else {
+      VLOG(9) << "setting variants to cluster size";
+      causal_variants = sim->generate_causal_variants(false);
+    }
     sim->wished_effect = FLAGS_minEffect;
     while (sim->wished_effect <= FLAGS_maxEffect) {
 
       VLOG(1) << "Current Efffect size: " << sim->wished_effect;
+      VLOG(1) << "Current Cluster size: " << sim->current_percentage;
       sim->power_calculation(FLAGS_powerIter, causal_variants);
       std::string output = FLAGS_path + std::to_string(sim_id) + FLAGS_out;
       sim->pvalues_output.save(output, arma::csv_ascii);
@@ -111,8 +121,6 @@ int main(int argc, char *argv[]) {
       sim->saveSim.save(output_sim, arma::csv_ascii);
       std::cout << sim_id << std::endl;
 
-      VLOG(1) << "writing for effect size: " << sim->wished_effect;
-      VLOG(1) << "writing for cluster size: " << sim->fixed_causal_var;
       sim->writeoutput(pFile, sim->power[0], sim->power[1], sim->power[2],
           sim->power[3], sim->current_percentage,
           sim->real_num_causal,
@@ -121,7 +129,7 @@ int main(int argc, char *argv[]) {
       sim_id += 1;
       VLOG(9) << sim_id;
     }
-    sim->current_percentage += sim->steps_percentage;
+//    sim->current_percentage += sim->steps_percentage;
   }
   std::fclose(pFile);
 
