@@ -55,7 +55,7 @@ void Simulation::power_calculation(int power_iter, arma::Col<int> causal_variant
 #pragma omp parallel for private(m)
   for (i = 0; i < power_iter; ++i) {
 
-    VLOG(9) << "simulating iteration " << i;
+    // VLOG(9) << "simulating iteration " << i;
     arma::uvec simulated_pheno_id = simulate_data(causal_variants);
     arma::Mat<int> temp_genotypes =
       genotype_matrix.rows(simulated_pheno_id);
@@ -78,7 +78,7 @@ void Simulation::power_calculation(int power_iter, arma::Col<int> causal_variant
 
   power.set_size(pvalues_output.n_cols);
   for(int t_test = 0; t_test < pvalues_output.n_cols; ++t_test){
-    arma::uvec temp = arma::find(pvalues_output.col(t_test) <= 0.05);
+    arma::uvec temp = arma::find(pvalues_output.col(t_test) <= pvalue_threshold);
     power(t_test) = temp.size() / (double)power_iter;
     VLOG(9) << "Power for test " << (t_test + 1) << " is " << power(t_test);
   }

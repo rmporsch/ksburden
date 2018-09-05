@@ -57,7 +57,9 @@ int main(int argc, char *argv[]) {
 
   sim->standardize_matrix();
   sim->fixed_causal_var = FLAGS_sizeCluster;
-  sim->max_test_iteration = FLAGS_iter;
+  sim->max_test_iteration = FLAGS_maxIter;
+  sim->test_iteration = FLAGS_iter;
+  sim->pvalue_threshold = FLAGS_pvalue;
   sim->life_time_risk = fLD::FLAGS_lifetimerisk;
   sim->num_controls = FLAGS_numcontrols;
   sim->num_cases = FLAGS_numcontrols;

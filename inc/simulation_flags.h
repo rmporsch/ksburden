@@ -16,6 +16,8 @@ DECLARE_int32(numcases);
 DECLARE_int32(numcontrols);
 DECLARE_int32(powerIter);
 DECLARE_int32(iter);
+DECLARE_int32(maxIter);
+DECLARE_double(pvalue);
 
 DECLARE_bool(trackPerformance);
 DECLARE_bool(storeSim);
