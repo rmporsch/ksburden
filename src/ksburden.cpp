@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
 
   VLOG(9) << "starting compuation";
   for (auto g = data.genes.begin(); g != data.genes.end(); ++g) {
+    VLOG(9) << *g;
     std::vector<std::vector<std::string>> gene_loc = data.get_gene_loc(*g);
     data.get_gene_matrix(gene_loc);
     int num_var_gene = data.genotype_matrix.n_cols;

@@ -8,6 +8,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 include_directories(inc)
 set( CMAKE_EXPORT_COMPILE_COMMANDS 1 )
+message(${LIBRARY_OUTPUT_PATH})
 
 # ==========
 # Check compiler version
@@ -98,28 +99,41 @@ endif()
 #========
 # Boost
 #========
-set(BOOST_DIR ${LIBRARY_OUTPUT_PATH}/boost)
-include_directories(BOOST_DIR)
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED OFF)
+set(Boost_USE_STATIC_RUNTIME OFF)
+set(BOOST_ROOT "/home/rmporsch/software/boost_1_62_0")
+find_package(Boost REQUIRED)
+include_directories( ${Boost_INCLUDE_DIRS} )
 
 #============
 # Armadillo
 #============
 ExternalProject_Add(ArmadilloDownload
-	PREFIX ${LIBRARY_OUTPUT_PATH}/armadillo-7.100.3
-	DOWNLOAD_COMMAND wget http://sourceforge.net/projects/arma/files/armadillo-8.100.0.tar.xz
-	CONFIGURE_COMMAND tar -xf ../armadillo-7.100.3.tar.xz -C ../ArmadilloDownload  --strip-components=1
-	BUILD_IN_SOURCE 1
-	BUILD_COMMAND cmake .
-	INSTALL_COMMAND make
-	UPDATE_COMMAND ""
-	)
+ 	PREFIX ${LIBRARY_OUTPUT_PATH}/armadillo-8.100.0
+ 	DOWNLOAD_COMMAND wget http://sourceforge.net/projects/arma/files/armadillo-8.100.0.tar.xz
+ 	CONFIGURE_COMMAND tar -xf ../armadillo-8.100.0.tar.xz -C ../ArmadilloDownload  --strip-components=1
+ 	BUILD_IN_SOURCE 1
+ 	BUILD_COMMAND cmake .
+ 	INSTALL_COMMAND make
+ 	UPDATE_COMMAND ""
+ 	)
 
-set(Armadillo_DIR ${LIBRARY_OUTPUT_PATH}/armadillo-7.100.3/src/ArmadilloDownload)
+set(Armadillo_DIR ${LIBRARY_OUTPUT_PATH}/armadillo-8.100.0/src/ArmadilloDownload)
 set(ARMADILLO_LIBRARY ${Armadillo_DIR}/libarmadillo.so)
 set(ARMADILLO_INCLUDE_DIR ${Armadillo_DIR}/include/)
 include_directories(${ARMADILLO_INCLUDE_DIR})
 #=============================
+# BLAS LAPACK
 #=============================
+find_package(BLAS REQUIRED)
+find_package(LAPACK REQUIRED)
+
+#=============================
+# Zlib
+#=============================
+find_package(ZLIB REQUIRED)
+include_directories(${ZLIB_INCLUDE_DIRS})
 
 #=============================
 # Library
@@ -147,7 +161,7 @@ target_compile_features(loadplink PRIVATE cxx_range_for)
 # liability_model
 add_library(liabilitymodel SHARED "src/liability_model.cpp")
 add_dependencies(liabilitymodel ArmadilloDownload loadvcf loadplink)
-target_link_libraries(liabilitymodel loadvcf)
+target_link_libraries(liabilitymodel ${Boost_LIBRARIES} loadvcf  )
 target_compile_features(liabilitymodel PRIVATE cxx_range_for)
 
 # simulation_model
@@ -193,9 +207,10 @@ target_link_libraries(sim
   loadplink
   variantFile
 	${ARMADILLO_LIBRARIES}
-	z
+	${ZLIB_LIBRARIES}
 	sim_flags
-	-O2 blas lapack -DEBUG
+  -O2 ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES}
+  -DEBUG
 	)
 target_compile_features(sim PRIVATE cxx_range_for)
 
@@ -208,9 +223,8 @@ target_link_libraries(sim2
   loadplink
   variantFile
 	${ARMADILLO_LIBRARIES}
-	z
 	sim_flags
-	-O2 blas lapack -DEBUG
+  -O2 ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ${ZLIB_LIBRARIES} gflags
 	)
 target_compile_features(sim2 PRIVATE cxx_range_for)
 
@@ -222,9 +236,8 @@ target_link_libraries(ksburden
 	loadvcf
   variantFile
 	${ARMADILLO_LIBRARIES}
-	z
-	ksburden_flags
-	-O2 blas lapack
+	ksburden_flags  
+  -O2 ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ${ZLIB_LIBRARIES} gflags
 	)
 target_compile_features(ksburden PRIVATE cxx_range_for)
 
@@ -258,8 +271,7 @@ target_link_libraries(tests
   loadplink
   variantFile
 	${ARMADILLO_LIBRARIES}
-	z
 	${gtest}
-	-O2 blas lapack -DEBUG
+  -O2 ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} -DEBUG ${ZLIB_LIBRARIES}
 	)
 target_compile_features(tests PRIVATE cxx_range_for)
